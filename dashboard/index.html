@@ -115,6 +115,7 @@
   <button class="nav-tab" onclick="showTab('visitas')">🗓️ Visitas</button>
   <button class="nav-tab" onclick="showTab('luthieria')">🎻 Luthiería</button>
   <button class="nav-tab" onclick="showTab('reuniones')">📝 Reuniones</button>
+  <button class="nav-tab" onclick="showTab('directores')">🎓 Directores</button>
   <button class="nav-tab" onclick="showTab('alertas')">🚨 Alertas</button>
 </div>
 
@@ -216,6 +217,20 @@
     </div>
   </div>
 
+  <!-- DIRECTORES -->
+  <div class="tab-content" id="tab-directores">
+    <div class="kpi-grid">
+      <div class="kpi c-navy"><div class="kpi-label">Total Directores</div><div class="kpi-val" id="d-total">0</div></div>
+      <div class="kpi c-teal"><div class="kpi-label">Activos</div><div class="kpi-val teal" id="d-activos">0</div></div>
+      <div class="kpi c-accent"><div class="kpi-label">Tiempo Completo</div><div class="kpi-val accent" id="d-tc">0</div></div>
+      <div class="kpi c-red"><div class="kpi-label">En Riesgo</div><div class="kpi-val red" id="d-riesgo">0</div></div>
+    </div>
+    <div class="table-card">
+      <div class="table-head"><div class="table-title">🎓 Directores y Apoyos</div><span class="tbadge tbadge-blue" id="badge-dir">0</span></div>
+      <div id="wrap-directores"><div class="empty"><div class="empty-icon">🎓</div>Sin directores registrados</div></div>
+    </div>
+  </div>
+
   <!-- ALERTAS -->
   <div class="tab-content" id="tab-alertas">
     <div class="kpi-grid">
@@ -270,8 +285,9 @@ function parseCSV(path) {
 async function cargarTodo() {
   document.getElementById('last-update').textContent = 'Actualizado: ' + new Date().toLocaleString('es-CO',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'short'});
 
-  const [formadores, bitacora, visitas, luthieria, reuniones] = await Promise.all([
+  const [formadores, directores, bitacora, visitas, luthieria, reuniones] = await Promise.all([
     parseCSV('SGR_PowerBI/formadores_crm.csv'),
+    parseCSV('SGR_PowerBI/directores.csv'),
     parseCSV('SGR_PowerBI/bitacora.csv'),
     parseCSV('SGR_PowerBI/visitas.csv'),
     parseCSV('SGR_PowerBI/luthieria.csv'),
@@ -279,21 +295,25 @@ async function cargarTodo() {
   ]);
 
   renderFormadores(formadores);
+  renderDirectores(directores);
   renderBitacora(bitacora);
   renderVisitas(visitas);
   renderLuthieria(luthieria);
   renderReuniones(reuniones);
-  renderAlertas(bitacora, reuniones, formadores);
-  renderResumen(formadores, bitacora, visitas, luthieria, reuniones);
+  renderAlertas(bitacora, reuniones, formadores, directores);
+  renderResumen(formadores, directores, bitacora, visitas, luthieria, reuniones);
 }
 
-function renderResumen(f,b,v,l,r) {
+function renderResumen(f,d,b,v,l,r) {
   const enRiesgo = f.filter(x=>x.Situacion_de_riesgo==='True'||x['Situacion de riesgo']==='True').length;
   const visProgr = v.filter(x=>x.Estado==='Programada').length;
   const escalados = b.filter(x=>(x['Requiere Coordinador']==='True'||x.Requiere_Coordinador==='True') && x.Estado!=='Cerrado').length;
   const compromisos = r.reduce((s,x)=>s+(parseInt(x['Compromisos pendientes']||0)||0),0);
 
   document.getElementById('r-formadores').textContent = f.length||FORMADORES_DATA.total;
+  // Update directores in resumen if element exists
+  const rDir = document.getElementById('r-directores');
+  if(rDir) rDir.textContent = d ? d.length : 0;
   document.getElementById('r-riesgo').textContent = enRiesgo;
   document.getElementById('r-visitas').textContent = visProgr;
   document.getElementById('r-luthieria').textContent = l.length;
@@ -318,6 +338,23 @@ function renderFormadores(data) {
   makeChart('c-contrato','doughnut', Object.keys(FORMADORES_DATA.porContrato), Object.values(FORMADORES_DATA.porContrato));
   makeChart('c-zona','bar', Object.keys(FORMADORES_DATA.porZona), Object.values(FORMADORES_DATA.porZona), ['#e8722a','#1a7a6a','#0f2240','#c8a400']);
   makeChart('c-nivel','doughnut', Object.keys(FORMADORES_DATA.porNivel), Object.values(FORMADORES_DATA.porNivel), ['#0f2240','#e8722a']);
+}
+
+function renderDirectores(data) {
+  const activos = data.filter(x=>x.Estado==='Activo').length;
+  const tc      = data.filter(x=>(x['Tipo de contrato']||'').toLowerCase().trim()==='tiempo completo').length;
+  const riesgo  = data.filter(x=>x['Situacion de riesgo']==='True').length;
+
+  document.getElementById('d-total').textContent  = data.length;
+  document.getElementById('d-activos').textContent = activos;
+  document.getElementById('d-tc').textContent      = tc;
+  document.getElementById('d-riesgo').textContent  = riesgo;
+  document.getElementById('badge-dir').textContent = data.length + ' directores';
+
+  const wrap = document.getElementById('wrap-directores');
+  if(!data.length){ wrap.innerHTML='<div class="empty"><div class="empty-icon">🎓</div>Sin directores registrados</div>'; return; }
+  const smap={'Activo':'pill-green','Inactivo':'pill-red','En permiso':'pill-amber','En riesgo':'pill-red'};
+  wrap.innerHTML=`<table><thead><tr><th>Nombre</th><th>Estado</th><th>Contrato</th><th>Tipología</th><th>Nivel</th></tr></thead><tbody>${data.slice(0,30).map(r=>`<tr><td>${r.Nombre||'—'}</td><td><span class="pill ${smap[r.Estado]||'pill-navy'}">${r.Estado||'—'}</span></td><td>${r['Tipo de contrato']||'—'}</td><td>${r.Tipologia||'—'}</td><td>${r['Nivel de formacion']||'—'}</td></tr>`).join('')}</tbody></table>`;
 }
 
 function renderBitacora(data) {
@@ -398,7 +435,7 @@ function renderReuniones(data) {
   wrap.innerHTML=`<table><thead><tr><th>Nombre</th><th>Tipo</th><th>Estado</th><th>Fecha</th><th>Compromisos</th></tr></thead><tbody>${data.map(r=>`<tr><td>${r.Nombre||'—'}</td><td>${r.Tipo||'—'}</td><td><span class="pill ${smap[r.Estado]||'pill-navy'}">${r.Estado||'—'}</span></td><td>${r.Fecha?r.Fecha.slice(0,10):'—'}</td><td>${r['Compromisos pendientes']||0}</td></tr>`).join('')}</tbody></table>`;
 }
 
-function renderAlertas(bitacora, reuniones, formadores) {
+function renderAlertas(bitacora, reuniones, formadores, directores) {
   const escalados   = bitacora.filter(x=>(x['Requiere Coordinador']==='True'||x.Requiere_Coordinador==='True') && x.Estado!=='Cerrado');
   const riesgos     = bitacora.filter(x=>x['Tipo de registro']==='Riesgo' && x.Estado!=='Cerrado').length;
   const compromisos = reuniones.reduce((s,x)=>s+(parseInt(x['Compromisos pendientes']||0)||0),0);
@@ -407,7 +444,8 @@ function renderAlertas(bitacora, reuniones, formadores) {
   document.getElementById('a-escalados').textContent = escalados.length;
   document.getElementById('a-riesgos').textContent = riesgos;
   document.getElementById('a-compromisos').textContent = compromisos;
-  document.getElementById('a-form-riesgo').textContent = formRiesgo;
+  const dirRiesgo = directores ? directores.filter(x=>x['Situacion de riesgo']==='True').length : 0;
+  document.getElementById('a-form-riesgo').textContent = formRiesgo + dirRiesgo;
   document.getElementById('badge-alertas').textContent = escalados.length + ' pendientes';
 
   const wrap = document.getElementById('wrap-alertas');
