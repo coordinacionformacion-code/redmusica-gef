@@ -1,0 +1,1345 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plan de Formación — Paulo v3</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:ital,wght@0,300;0,700;0,900;1,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#0c0c0e; --s1:#131316; --s2:#1a1a1f;
+  --border:#252530; --border2:#2e2e3a;
+  --y:#d4ff4e; --b:#4ecbff; --p:#c14eff;
+  --r:#ff4e6a; --g:#4effa0; --o:#ff9b4e;
+  --text:#e8e8f0; --muted:#55556a; --muted2:#88889a;
+  --mono:'DM Mono',monospace; --serif:'Fraunces',serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--mono);min-height:100vh}
+body::after{content:'';position:fixed;inset:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:9999}
+
+/* HEADER */
+.hdr{display:grid;grid-template-columns:1fr auto;align-items:end;padding:2.5rem 2.5rem 1.75rem;border-bottom:1px solid var(--border);gap:2rem;position:relative;overflow:hidden}
+.hdr::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 80% at 80% 50%,rgba(196,78,255,.06) 0%,transparent 70%);pointer-events:none}
+.eyebrow{font-size:.58rem;letter-spacing:.18em;color:var(--y);margin-bottom:.6rem;text-transform:uppercase}
+.ttl{font-family:var(--serif);font-size:clamp(1.8rem,4.5vw,3.5rem);font-weight:900;line-height:.95;letter-spacing:-.03em;margin-bottom:.6rem}
+.ttl em{font-style:italic;font-weight:300;color:var(--muted2)}
+.hdesc{font-size:.68rem;color:var(--muted2);line-height:1.7;max-width:360px}
+.hstats{display:flex;flex-direction:column;gap:.4rem;text-align:right;flex-shrink:0}
+.hs{font-size:.58rem;color:var(--muted);letter-spacing:.08em}
+.hs span{display:block;font-size:1.6rem;font-family:var(--serif);font-weight:900;color:var(--text);line-height:1;margin-bottom:.1rem}
+
+/* TOOLBAR */
+.tb{display:flex;gap:1.25rem;padding:.85rem 2.5rem;background:var(--s1);border-bottom:1px solid var(--border);align-items:center;flex-wrap:wrap}
+.tbg{display:flex;flex-direction:column;gap:.3rem}
+.tbl{font-size:.48rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted)}
+.tbp{display:flex;gap:.28rem;flex-wrap:wrap}
+.pl{background:transparent;border:1px solid var(--border2);color:var(--muted2);font-family:var(--mono);font-size:.58rem;padding:.28rem .55rem;cursor:pointer;transition:all .15s;border-radius:2px;white-space:nowrap}
+.pl:hover{border-color:var(--muted);color:var(--text)}
+.pl.on{color:var(--bg);border-color:transparent}
+.pl.on[data-f="all"]{background:var(--text);color:var(--bg)}
+.pl.on[data-f="ia"]{background:var(--y)}
+.pl.on[data-f="arte"]{background:var(--b)}
+.pl.on[data-f="musica"]{background:var(--p)}
+.pl.on[data-f="gestion"]{background:var(--r)}
+.pl.on[data-f="tech"]{background:var(--g)}
+.pl.on[data-t="1"]{background:var(--y)}
+.pl.on[data-t="1.5"]{background:var(--o)}
+.pl.on[data-t="2"]{background:var(--r)}
+.pl.on[data-fmt="all"]{background:var(--text);color:var(--bg)}
+.pl.on[data-fmt="pod"]{background:var(--b)}
+.pl.on[data-fmt="vid"]{background:var(--r)}
+.pl.on[data-fmt="pdf"]{background:var(--o)}
+.pl.on[data-fmt="mm"]{background:var(--p)}
+
+/* LAYOUT */
+.layout{display:grid;grid-template-columns:210px 1fr;min-height:calc(100vh - 170px)}
+
+/* SIDENAV */
+.snav{border-right:1px solid var(--border);padding:1.25rem .85rem;position:sticky;top:0;align-self:start}
+.snt{font-size:.48rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);padding-bottom:.65rem;border-bottom:1px solid var(--border);margin-bottom:.65rem}
+.si{display:flex;align-items:center;gap:.55rem;padding:.4rem .45rem;cursor:pointer;border-radius:3px;transition:background .15s;border:1px solid transparent}
+.si:hover{background:var(--s2)}
+.si.on{background:var(--s1);border-color:var(--border)}
+.sd{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.sn{font-size:.6rem;color:var(--muted2);line-height:1.3;transition:color .15s}
+.si:hover .sn,.si.on .sn{color:var(--text)}
+.sprog{margin-top:1.25rem;padding-top:1rem;border-top:1px solid var(--border)}
+.rw{position:relative;width:68px;height:68px;margin:0 auto .65rem}
+.rw svg{transform:rotate(-90deg)}
+.rt{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.rp{font-family:var(--serif);font-size:1rem;font-weight:900;color:var(--y);line-height:1}
+.rs{font-size:.4rem;color:var(--muted);letter-spacing:.08em;margin-top:.12rem}
+
+/* CONTENT */
+.content{padding:1.75rem 2.25rem}
+.wp{display:none;animation:up .22s ease}
+.wp.on{display:block}
+@keyframes up{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+.wkh{display:flex;align-items:baseline;gap:.85rem;margin-bottom:1.25rem;flex-wrap:wrap}
+.wkn{font-size:.52rem;letter-spacing:.15em;color:var(--muted);text-transform:uppercase}
+.wkt{font-family:var(--serif);font-size:1.5rem;font-weight:700;letter-spacing:-.02em;line-height:1}
+.wkhr{font-size:.58rem;color:var(--y);margin-left:auto}
+
+/* FLASH */
+.flash{display:flex;gap:.85rem;background:#16160e;border:1px solid #2e2e12;border-left:3px solid var(--y);padding:.85rem 1.1rem;margin-bottom:1.25rem}
+.flash-i{font-size:.9rem;flex-shrink:0;margin-top:.1rem}
+.flash-t{font-size:.48rem;letter-spacing:.15em;color:var(--y);text-transform:uppercase;margin-bottom:.25rem}
+.flash-b{font-size:.68rem;color:var(--muted2);line-height:1.6}
+
+/* KPI */
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);margin-bottom:1.25rem;border:1px solid var(--border)}
+.kpi{background:var(--s1);padding:.75rem .85rem;text-align:center}
+.kn{font-family:var(--serif);font-size:1.45rem;font-weight:900;line-height:1;margin-bottom:.18rem}
+.kl{font-size:.48rem;letter-spacing:.1em;color:var(--muted);text-transform:uppercase}
+
+/* GRID */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:1px;background:var(--border);margin-bottom:1.25rem;border:1px solid var(--border)}
+
+/* CARD */
+.card{background:var(--s1);padding:1.1rem;position:relative;transition:background .15s}
+.card:hover{background:var(--s2)}
+.card.gone{display:none}
+.card.done{opacity:.32}
+.card.done .ctit{text-decoration:line-through}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.card[data-f="ia"]::before{background:var(--y)}
+.card[data-f="arte"]::before{background:var(--b)}
+.card[data-f="musica"]::before{background:var(--p)}
+.card[data-f="gestion"]::before{background:var(--r)}
+.card[data-f="tech"]::before{background:var(--g)}
+.ctag{font-size:.48rem;letter-spacing:.12em;text-transform:uppercase;margin-bottom:.38rem}
+.card[data-f="ia"] .ctag{color:var(--y)}
+.card[data-f="arte"] .ctag{color:var(--b)}
+.card[data-f="musica"] .ctag{color:var(--p)}
+.card[data-f="gestion"] .ctag{color:var(--r)}
+.card[data-f="tech"] .ctag{color:var(--g)}
+.ctit{font-family:var(--serif);font-size:.88rem;font-weight:700;line-height:1.25;margin-bottom:.28rem}
+.csrc{font-size:.55rem;color:var(--muted);margin-bottom:.45rem}
+.cdesc{font-size:.65rem;color:var(--muted2);line-height:1.55;margin-bottom:.75rem}
+
+/* LINKS */
+.clinks{display:flex;gap:.32rem;flex-wrap:wrap;margin-bottom:.65rem}
+.lnk{display:inline-flex;align-items:center;gap:.25rem;font-size:.53rem;letter-spacing:.04em;padding:.22rem .45rem;border-radius:2px;text-decoration:none;transition:all .15s;border:1px solid}
+.lnk svg{width:8px;height:8px;fill:currentColor;flex-shrink:0}
+.sp{color:#1db954;border-color:#1a3d23;background:#0e1f12}.sp:hover{background:#1a3d23}
+.ap{color:#fc3c44;border-color:#3d1a1c;background:#1f0e0f}.ap:hover{background:#3d1a1c}
+.yt{color:#ff4444;border-color:#3d1010;background:#1f0808}.yt:hover{background:#3d1010}
+.wb{color:var(--b);border-color:#102030;background:#080f18}.wb:hover{background:#102030}
+.pd{color:var(--o);border-color:#302010;background:#180f08}.pd:hover{background:#302010}
+.mm{color:var(--p);border-color:#250e35;background:#120818}.mm:hover{background:#250e35}
+
+/* CARD FOOTER */
+.cfoot{display:flex;align-items:center;gap:.4rem;flex-wrap:wrap}
+.cmeta{font-size:.52rem;color:var(--muted);display:flex;gap:.45rem;flex:1}
+.cctx{font-size:.52rem;color:var(--muted);background:var(--bg);padding:.16rem .3rem;border-radius:2px}
+
+/* DONE BTN — now full row at bottom */
+.done-bar{margin-top:.75rem;padding-top:.65rem;border-top:1px solid var(--border)}
+.btn-done{width:100%;background:transparent;border:1px solid var(--border2);color:var(--muted);font-family:var(--mono);font-size:.58rem;padding:.35rem;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:.4rem}
+.btn-done:hover{border-color:var(--y);color:var(--y)}
+.card.done .btn-done{background:var(--border);border-color:var(--border);color:var(--border2)}
+.card.done .btn-done::before{content:'✓ completado'}
+.card:not(.done) .btn-done::before{content:'marcar como revisado'}
+.progress-mini{height:2px;background:var(--border);margin-top:.3rem;border-radius:1px;overflow:hidden}
+.progress-mini-fill{height:100%;background:var(--y);transition:width .3s;width:0%}
+
+/* SECTION TITLES */
+.sec-head{font-family:var(--serif);font-size:.95rem;font-weight:700;margin-bottom:1rem;display:flex;align-items:center;gap:.65rem;letter-spacing:-.01em}
+.sec-head::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* POD LIST */
+.pod-sec{margin-top:1.75rem;padding-top:1.25rem;border-top:1px solid var(--border)}
+.pods{display:flex;flex-direction:column;gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:1.25rem}
+.pod{background:var(--s1);padding:.85rem 1rem;display:grid;grid-template-columns:auto 1fr;gap:.85rem;align-items:start;transition:background .15s;position:relative}
+.pod:hover{background:var(--s2)}
+.pod.done{opacity:.32}
+.pod.done .pname{text-decoration:line-through}
+.pod-num{font-family:var(--serif);font-size:1rem;font-weight:900;color:var(--border2);width:1.75rem;text-align:center;margin-top:.1rem}
+.pname{font-family:var(--serif);font-size:.85rem;font-weight:700;margin-bottom:.22rem;line-height:1.2}
+.pdesc{font-size:.63rem;color:var(--muted2);line-height:1.5;margin-bottom:.45rem}
+.plinks{display:flex;gap:.3rem;flex-wrap:wrap}
+.pod .done-bar{margin-top:.55rem}
+
+/* MAPA MENTAL interactivo acordeón */
+.mm-wrap{background:var(--s1);border:1px solid var(--border);padding:0;margin-bottom:1.25rem;overflow:hidden}
+.mm-hdr{padding:.85rem 1.1rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.mm-title{font-family:var(--serif);font-size:.85rem;font-weight:700}
+.mm-sub{font-size:.55rem;color:var(--muted);letter-spacing:.05em}
+.mm-center{padding:.75rem 1.1rem;background:#0e0e12;border-bottom:1px solid var(--border);font-size:.65rem;color:var(--muted2);font-style:italic;text-align:center}
+.mm-branches{display:flex;flex-direction:column;gap:1px;background:var(--border)}
+.mm-branch{background:var(--s1)}
+.mm-bhead{padding:.6rem 1rem;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:.5rem;transition:background .15s;user-select:none;border-left:3px solid transparent}
+.mm-bhead:hover{background:var(--s2)}
+.mm-blabel{font-size:.65rem;font-weight:500;line-height:1.3}
+.mm-arrow{font-size:.6rem;color:var(--muted);transition:transform .2s;flex-shrink:0}
+.mm-branch.open .mm-arrow{transform:rotate(90deg)}
+.mm-bbody{max-height:0;overflow:hidden;transition:max-height .3s ease;background:var(--bg)}
+.mm-branch.open .mm-bbody{max-height:600px}
+.mm-leaf{padding:.55rem 1.1rem;font-size:.62rem;color:var(--muted2);border-top:1px solid var(--border);line-height:1.55;display:flex;flex-direction:column;gap:.22rem}
+.mm-ltitle{font-size:.64rem;color:var(--text);font-weight:500}
+.mm-llink{display:inline-flex;align-items:center;gap:.25rem;color:var(--b);text-decoration:none;font-size:.56rem;border:1px solid #102030;background:#080f18;padding:.16rem .32rem;border-radius:2px;width:fit-content;margin-top:.15rem;transition:background .15s}
+.mm-llink:hover{background:#102030}
+/* color accent per map */
+.mm-ia .mm-bhead{border-left-color:var(--p)}.mm-ia .mm-blabel{color:var(--p)}
+.mm-arte .mm-bhead{border-left-color:var(--b)}.mm-arte .mm-blabel{color:var(--b)}
+.mm-tech .mm-bhead{border-left-color:var(--g)}.mm-tech .mm-blabel{color:var(--g)}
+.mm-sint .mm-bhead{border-left-color:var(--o)}.mm-sint .mm-blabel{color:var(--o)}
+.mm-note{padding:.75rem 1rem;border-top:1px solid var(--border);background:var(--s1)}
+.mm-nlabel{font-size:.48rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:.4rem}
+.mm-nta{width:100%;background:transparent;border:none;color:var(--text);font-family:var(--mono);font-size:.63rem;line-height:1.6;resize:vertical;min-height:55px;outline:none}
+.mm-nta::placeholder{color:var(--muted)}
+
+/* NOTE */
+.note-area{margin-top:1.75rem;border:1px dashed var(--border2);padding:.85rem 1.1rem;display:flex;gap:.85rem;align-items:flex-start;background:var(--s1)}
+.nta{flex:1;background:transparent;border:none;color:var(--text);font-family:var(--mono);font-size:.65rem;line-height:1.6;resize:vertical;min-height:50px;outline:none}
+.nta::placeholder{color:var(--muted)}
+.btn-save{background:var(--y);border:none;color:var(--bg);font-family:var(--mono);font-size:.52rem;padding:.4rem .65rem;cursor:pointer;font-weight:500;letter-spacing:.1em;transition:opacity .15s;align-self:flex-start;text-transform:uppercase}
+.btn-save:hover{opacity:.8}
+
+/* UTILIDADES */
+.utils{display:flex;gap:.4rem;padding:.6rem 2.5rem;background:#0e0e10;border-bottom:1px solid var(--border);align-items:center;flex-wrap:wrap}
+.utils-label{font-size:.48rem;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;margin-right:.25rem}
+.util-btn{background:transparent;border:1px solid var(--border2);color:var(--muted2);font-family:var(--mono);font-size:.55rem;padding:.28rem .55rem;cursor:pointer;transition:all .15s;border-radius:2px;display:flex;align-items:center;gap:.3rem}
+.util-btn:hover{border-color:var(--muted);color:var(--text)}
+.util-btn.danger:hover{border-color:var(--r);color:var(--r)}
+.util-sep{width:1px;height:14px;background:var(--border);margin:0 .25rem}
+
+/* TOAST */
+.toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--s2);border:1px solid var(--border2);color:var(--text);font-family:var(--mono);font-size:.62rem;padding:.65rem 1rem;border-radius:3px;z-index:10000;opacity:0;transform:translateY(8px);transition:all .25s;pointer-events:none;max-width:280px;line-height:1.5}
+.toast.show{opacity:1;transform:translateY(0)}
+.toast.ok{border-left:3px solid var(--g)}
+.toast.err{border-left:3px solid var(--r)}
+.toast.info{border-left:3px solid var(--b)}
+
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border2)}
+
+@media(max-width:680px){
+  .layout{grid-template-columns:1fr}
+  .snav{position:static;border-right:none;border-bottom:1px solid var(--border)}
+  .hdr{grid-template-columns:1fr}
+  .hstats{text-align:left;flex-direction:row;gap:1.25rem}
+  .kpi-row{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div>
+    <div class="eyebrow">// plan de formación · v5 · mar 2026</div>
+    <h1 class="ttl">IA · Arte<br><em>Cultura</em> · Música<br>Tecnología</h1>
+    <p class="hdesc">Acceso por código · progreso guardado en la nube · compartible<br>1–2h/día · podcasts + video + lectura · ajustable</p>
+  </div>
+  <div class="hstats">
+    <div class="hs"><span id="tot-done">0</span>revisados</div>
+    <div class="hs"><span id="tot-all">0</span>recursos</div>
+  </div>
+</header>
+
+<!-- PANTALLA DE LOGIN -->
+<div id="login-screen" style="position:fixed;inset:0;background:var(--bg);z-index:9998;display:flex;align-items:center;justify-content:center;padding:2rem">
+  <div style="width:100%;max-width:360px">
+    <div style="font-family:var(--serif);font-size:2rem;font-weight:900;letter-spacing:-.03em;margin-bottom:.5rem">Acceder</div>
+    <div style="font-size:.65rem;color:var(--muted2);margin-bottom:2rem;line-height:1.6">Ingresa el código que te asignó el coordinador para acceder a tu plan de formación.</div>
+    <input id="login-input" type="text" placeholder="tu-código" autocomplete="off" autocapitalize="none"
+      style="width:100%;background:var(--s1);border:1px solid var(--border2);color:var(--text);font-family:var(--mono);font-size:.85rem;padding:.75rem 1rem;outline:none;border-radius:3px;margin-bottom:.75rem;letter-spacing:.05em"
+      onkeydown="if(event.key==='Enter')intentarLogin()">
+    <button onclick="intentarLogin()"
+      style="width:100%;background:var(--y);border:none;color:var(--bg);font-family:var(--mono);font-size:.7rem;font-weight:500;padding:.75rem;cursor:pointer;letter-spacing:.1em;text-transform:uppercase;border-radius:3px">
+      Entrar
+    </button>
+    <div id="login-error" style="font-size:.62rem;color:var(--r);margin-top:.65rem;min-height:1rem;text-align:center"></div>
+    <div id="login-loading" style="font-size:.62rem;color:var(--muted);margin-top:.65rem;text-align:center;display:none">verificando código...</div>
+  </div>
+</div>
+
+<!-- BARRA DE USUARIO (visible tras login) -->
+<div id="user-bar" style="display:none;background:#0e0e10;border-bottom:1px solid var(--border);padding:.5rem 2.5rem;display:none;align-items:center;gap:1rem;flex-wrap:wrap">
+  <span style="font-size:.55rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase">sesión</span>
+  <span id="user-nombre" style="font-size:.65rem;color:var(--y)"></span>
+  <span id="user-codigo-display" style="font-size:.55rem;color:var(--muted)"></span>
+  <div style="flex:1"></div>
+  <button id="btn-dashboard" onclick="abrirDashboard()" style="display:none;background:transparent;border:1px solid var(--border2);color:var(--muted2);font-family:var(--mono);font-size:.55rem;padding:.28rem .55rem;cursor:pointer;border-radius:2px" onmouseover="this.style.borderColor='var(--y)';this.style.color='var(--y)'" onmouseout="this.style.borderColor='var(--border2)';this.style.color='var(--muted2)'">
+    📊 dashboard coordinador
+  </button>
+  <button onclick="cerrarSesion()" style="background:transparent;border:1px solid var(--border2);color:var(--muted2);font-family:var(--mono);font-size:.55rem;padding:.28rem .55rem;cursor:pointer;border-radius:2px" onmouseover="this.style.borderColor='var(--r)';this.style.color='var(--r)'" onmouseout="this.style.borderColor='var(--border2)';this.style.color='var(--muted2)'">
+    salir
+  </button>
+</div>
+
+<!-- MODAL DASHBOARD COORDINADOR -->
+<div id="dashboard-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:9997;overflow-y:auto;padding:2rem">
+  <div style="max-width:700px;margin:0 auto;background:var(--s1);border:1px solid var(--border);padding:2rem">
+    <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:1.5rem">
+      <div style="font-family:var(--serif);font-size:1.4rem;font-weight:900">Dashboard coordinador</div>
+      <button onclick="cerrarDashboard()" style="background:transparent;border:1px solid var(--border2);color:var(--muted2);font-family:var(--mono);font-size:.6rem;padding:.3rem .6rem;cursor:pointer">cerrar ✕</button>
+    </div>
+
+    <!-- AGREGAR CÓDIGO -->
+    <div style="background:var(--bg);border:1px solid var(--border);padding:1rem;margin-bottom:1.5rem">
+      <div style="font-size:.55rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:.75rem">agregar participante</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr auto;gap:.5rem">
+        <input id="nuevo-nombre" placeholder="Nombre" style="background:var(--s1);border:1px solid var(--border2);color:var(--text);font-family:var(--mono);font-size:.65rem;padding:.4rem .6rem;outline:none">
+        <input id="nuevo-codigo" placeholder="código (ej: maria22)" style="background:var(--s1);border:1px solid var(--border2);color:var(--text);font-family:var(--mono);font-size:.65rem;padding:.4rem .6rem;outline:none">
+        <button onclick="crearCodigo()" style="background:var(--y);border:none;color:var(--bg);font-family:var(--mono);font-size:.6rem;padding:.4rem .75rem;cursor:pointer;font-weight:500">+ crear</button>
+      </div>
+      <div id="dashboard-msg" style="font-size:.6rem;color:var(--g);margin-top:.5rem;min-height:.8rem"></div>
+    </div>
+
+    <!-- TABLA DE PROGRESO -->
+    <div style="font-size:.55rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:.75rem">progreso de participantes</div>
+    <div id="dashboard-tabla" style="font-size:.65rem;color:var(--muted2)">cargando...</div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+  <div class="tbg">
+    <div class="tbl">tiempo/día</div>
+    <div class="tbp">
+      <button class="pl on" data-t="1">1h</button>
+      <button class="pl" data-t="1.5">1.5h</button>
+      <button class="pl" data-t="2">2h</button>
+    </div>
+  </div>
+  <div class="tbg">
+    <div class="tbl">área</div>
+    <div class="tbp">
+      <button class="pl on" data-f="all">todo</button>
+      <button class="pl" data-f="ia">IA</button>
+      <button class="pl" data-f="arte">arte · cultura</button>
+      <button class="pl" data-f="musica">música</button>
+      <button class="pl" data-f="gestion">gestión</button>
+      <button class="pl" data-f="tech">tech sonora</button>
+    </div>
+  </div>
+  <div class="tbg">
+    <div class="tbl">formato</div>
+    <div class="tbp">
+      <button class="pl on" data-fmt="all">todo</button>
+      <button class="pl" data-fmt="pod">🎙 podcast</button>
+      <button class="pl" data-fmt="vid">▶ video</button>
+      <button class="pl" data-fmt="pdf">📄 lectura</button>
+      <button class="pl" data-fmt="mm">🧠 mapa</button>
+    </div>
+  </div>
+</div>
+
+<div class="layout">
+<nav class="snav">
+  <div class="snt">semanas</div>
+  <div class="si on" data-w="1" onclick="go(1)"><div class="sd" style="background:var(--y)"></div><span class="sn">1 · IA y creatividad</span></div>
+  <div class="si" data-w="2" onclick="go(2)"><div class="sd" style="background:var(--b)"></div><span class="sn">2 · Arte sonoro</span></div>
+  <div class="si" data-w="3" onclick="go(3)"><div class="sd" style="background:var(--p)"></div><span class="sn">3 · Industria musical</span></div>
+  <div class="si" data-w="4" onclick="go(4)"><div class="sd" style="background:var(--r)"></div><span class="sn">4 · Gestión cultural</span></div>
+  <div class="si" data-w="5" onclick="go(5)"><div class="sd" style="background:var(--g)"></div><span class="sn">5 · Tech + Performance</span></div>
+  <div class="si" data-w="6" onclick="go(6)"><div class="sd" style="background:var(--o)"></div><span class="sn">6 · Revisión + ciclo</span></div>
+  <div class="sprog">
+    <div class="snt">progreso total</div>
+    <div class="rw">
+      <svg width="68" height="68" viewBox="0 0 68 68">
+        <circle cx="34" cy="34" r="26" fill="none" stroke="#252530" stroke-width="4"/>
+        <circle id="ring" cx="34" cy="34" r="26" fill="none" stroke="#d4ff4e" stroke-width="4" stroke-dasharray="163" stroke-dashoffset="163" stroke-linecap="round"/>
+      </svg>
+      <div class="rt"><div class="rp" id="rpct">0%</div><div class="rs">AVANCE</div></div>
+    </div>
+  </div>
+</nav>
+
+<main class="content">
+
+<!-- ══ SEMANA 1 ══ -->
+<section class="wp on" id="w1">
+  <div class="wkh">
+    <span class="wkn">SEM 01/06</span>
+    <h2 class="wkt">IA y creatividad — fundamentos</h2>
+    <span class="wkhr" id="wh1">~5h / sem</span>
+  </div>
+  <div class="flash">
+    <div class="flash-i">⚡</div>
+    <div>
+      <div class="flash-t">tendencia global · mar 2026</div>
+      <div class="flash-b">Universal Music + Udio lanzan suscripción conjunta para música licenciada con IA. Disney invirtió $1B en OpenAI para licenciar personajes Marvel/Pixar con Sora. El debate legal sobre entrenamiento de modelos con obras artísticas sigue abierto — 2025 fue el año bisagra en acuerdos entre majors y plataformas de IA.</div>
+    </div>
+  </div>
+  <div class="kpi-row">
+    <div class="kpi"><div class="kn">7</div><div class="kl">recursos</div></div>
+    <div class="kpi"><div class="kn">~5h</div><div class="kl">semana</div></div>
+    <div class="kpi"><div class="kn">3</div><div class="kl">formatos</div></div>
+    <div class="kpi"><div class="kn" id="d1">0</div><div class="kl">revisados</div></div>
+  </div>
+
+  <div class="grid">
+    <div class="card" id="c1-1" data-f="ia" data-fmt="pod">
+      <div class="ctag">IA · arte · podcast</div>
+      <div class="ctit">Dream Machine — AI and Creativity</div>
+      <div class="csrc">James Finestone · Spotify</div>
+      <div class="cdesc">Primera fila en tiempo real sobre cómo la IA reshapea el mundo creativo. Artistas, ingenieros, trailblazers. ¿La creatividad humana sobrevive?</div>
+      <div class="clinks">
+        <a class="lnk sp" href="https://open.spotify.com/show/3UXLlUoHXXtS0gxbjUloLa" target="_blank"><svg viewBox="0 0 24 24"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>Spotify</a>
+      </div>
+      <div class="cfoot"><div class="cmeta"><span>~45 min/ep</span></div><span class="cctx">🚗 manejando</span></div>
+      <div class="done-bar"><button class="btn-done" onclick="tick('c1-1')"></button><div class="progress-mini"><div class="progress-mini-fill" id="pm-c1-1"></div></div></div>
+    </div>
+
+    <div class="card" id="c1-2" data-f="ia" data-fmt="pod">
+      <div class="ctag">IA · arte · podcast</div>
+      <div class="ctit">Art of AI Podcast</div>
+      <div class="csrc">Doug Karr + AI Charli · Spotify</div>
+      <div class="cdesc">IA generativa e impacto en el arte. ¿Sufre o florece la creatividad? Entrevistas con artistas e ingenieros. Perspectiva crítica y técnica equilibrada.</div>
+      <div class="clinks">
+        <a class="lnk sp" href="https://open.spotify.com/show/06eFSLDZSUouzXhn1AAyLu" target="_blank"><svg viewBox="0 0 24 24"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>Spotify</a>
+      </div>
+      <div class="cfoot"><div class="cmeta"><span>~30 min/ep</span></div><span class="cctx">🍽 almorzando</span></div>
+      <div class="done-bar"><button class="btn-done" onclick="tick('c1-2')"></button><div class="progress-mini"><div class="progress-mini-fill" id="pm-c1-2"></div></div></div>
+    </div>
+
+    <div class="card" id="c1-3" data-f="ia" data-fmt="pod">
+      <div class="ctag">IA · música · podcast</div>
+      <div class="ctit">What's Up in Music AI</div>
+      <div class="csrc">DJ Rob O. Tics · Spotify</div>
+      <div class="cdesc">17 min semanales: IA en creación, producción, distribución y live performance. Denso, sin relleno, siempre actualizado.</div>
+      <div class="clinks">
+        <a class="lnk sp" href="https://open.spotify.com/show/2mAqNasoTNqbRjxRMdFMwB" target="_blank"><svg viewBox="0 0 24 24"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>Spotify</a>
+      </div>
+      <div class="cfoot"><div class="cmeta"><span>~17 min/ep</span></div><span class="cctx">🚗 manejando</span></div>
+      <div class="done-bar"><button class="btn-done" onclick="tick('c1-3')"></button><div class="progress-mini"><div class="progress-mini-fill" id="pm-c1-3"></div></div></div>
+    </div>
+
+    <div class="card" id="c1-4" data-f="ia" data-fmt="pdf">
+      <div class="ctag">IA · música · lectura</div>
+      <div class="ctit">Berklee: AI Music — What Musicians Need to Know</div>
+      <div class="csrc">Berklee Online · TakeNote · verificado ✓</div>
+      <div class="cdesc">Estado del arte de IA en música. Herramientas generativas, implicaciones éticas y económicas para músicos. Artículo actualizado oct 2025.</div>
+      <div class="clinks">
+        <a class="lnk wb" href="https://online.berklee.edu/takenote/ai-music-what-musicians-need-to-know/" target="_blank"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>Berklee Online</a>
+      </div>
+      <div class="cfoot"><div class="cmeta"><span>~15 min</span></div><span class="cctx">📖 lectura</span></div>
+      <div class="done-bar"><button class="btn-done" onclick="tick('c1-4')"></button><div class="progress-mini"><div class="progress-mini-fill" id="pm-c1-4"></div></div></div>
+    </div>
+
+    <div class="card" id="c1-5" data-f="ia" data-fmt="pdf">
+      <div class="ctag">IA · música · lectura</div>
+      <div class="ctit">Berklee BEATL — AI Music Summit 2026</div>
+      <div class="csrc">Berklee Emerging Artistic Technology Lab · verificado ✓</div>
+      <div class="cdesc">Berklee lanza AIMS (AI Music Summit, jun 2026). BEATL: lab de convergencia música+IA fundado 2025. Lectura clave para entender el campo institucional.</div>
+      <div class="clinks">
+        <a class="lnk wb" href="https://www.berklee.edu/berklee-now/news/berklee-launches-aims-ai-music-summit" target="_blank"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>Berklee AIMS</a>
+        <a class="lnk wb" href="https://www.berklee.edu/beatl" target="_blank"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>BEATL Lab</a>
+      </div>
+      <div class="cfoot"><div class="cmeta"><span>~10 min</span></div><span class="cctx">📖 lectura</span></div>
+      <div class="done-bar"><button class="btn-done" onclick="tick('c1-5')"></button><div class="progress-mini"><div class="progress-mini-fill" id="pm-c1-5"></div></div></div>
+    </div>
+
+    <div class="card" id="c1-6" data-f="ia" data-fmt="pdf">
+      <div class="ctag">IA · cultura · lectura</div>
+      <div class="ctit">NPR: The Year in AI and Culture 2025</div>
+      <div class="csrc">NPR · Chloe Veltman · dic 2025 · verificado ✓</div>
+      <div class="cdesc">Síntesis del año bisagra: acuerdos majors+IA, actriz IA Tilly Norwood, litigios, tendencias 2026. Lectura/escucha de 15 min.</div>
+      <div class="clinks">
+        <a class="lnk wb" href="https://www.npr.org/2025/12/28/nx-s1-5653367/the-year-in-ai-and-culture" target="_blank"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>NPR</a>
+      </div>
+      <div class="cfoot"><div class="cmeta"><span>~15 min</span></div><span class="cctx">📖 lectura</span></div>
+      <div class="done-bar"><button class="btn-done" onclick="tick('c1-6')"></button><div class="progress-mini"><div class="progress-mini-fill" id="pm-c1-6"></div></div></div>
+    </div>
+
+    <div class="card" id="c1-7" data-f="ia" data-fmt="mm">
+      <div class="ctag">IA · arte · mapa mental</div>
+      <div class="ctit">Mapa: Ecosistema IA + Arte + Música</div>
+      <div class="csrc">Embebido — abre en esta pantalla</div>
+      <div class="cdesc">Vista del estado del campo en 2026: actores, herramientas, debates y circuitos. Úsalo para orientarte al inicio de la semana.</div>
+      <div class="clinks">
+        <button class="lnk mm" onclick="toggleMM('mm1')">🧠 Ver / ocultar mapa</button>
+      </div>
+      <div class="cfoot"><div class="cmeta"><span>~10 min</span></div><span class="cctx">👁 visual</span></div>
+      <div class="done-bar"><button class="btn-done" onclick="tick('c1-7')"></button><div class="progress-mini"><div class="progress-mini-fill" id="pm-c1-7"></div></div></div>
+    </div>
+  </div>
+
+  <!-- MAPA 1 interactivo: Ecosistema IA + Arte + Música -->
+  <div class="mm-wrap mm-ia" id="mm1" style="display:none">
+    <div class="mm-hdr">
+      <div><div class="mm-title">Ecosistema IA + Arte + Música — 2026</div>
+      <div class="mm-sub">▶ clic en cada nodo para expandir · clic de nuevo para cerrar</div></div>
+    </div>
+    <div class="mm-branches">
+      <div class="mm-branch" onclick="this.classList.toggle('open')">
+        <div class="mm-bhead"><span class="mm-blabel">Herramientas IA creativas</span><span class="mm-arrow">▶</span></div>
+        <div class="mm-bbody">
+          <div class="mm-leaf"><div class="mm-ltitle">Generación musical</div>Suno, Udio, AIVA generan canciones completas desde texto. Udio lanzó suscripción con Universal Music en 2026.</div>
+          <div class="mm-leaf"><div class="mm-ltitle">IA en tu stack</div>Ableton 12 incorpora transformación de audio con ML. Max for Live tiene dispositivos con machine learning integrado.</div>
+          <div class="mm-leaf"><div class="mm-ltitle">Google Magenta · Sony Flow Machines</div>Plataformas para colaboración entre artistas y tecnólogos. Creación musical aumentada con IA.</div>
+        </div>
+      </div>
+      <div class="mm-branch" onclick="this.classList.toggle('open')">
+        <div class="mm-bhead"><span class="mm-blabel">Actores de la industria</span><span class="mm-arrow">▶</span></div>
+        <div class="mm-bbody">
+          <div class="mm-leaf"><div class="mm-ltitle">Universal Music + Udio</div>Primer acuerdo major + IA: suscripción de música licenciada generada con IA. Lanzamiento 2026.</div>
+          <div class="mm-leaf"><div class="mm-ltitle">Disney + OpenAI</div>$1B de inversión. Licencia personajes Marvel/Pixar para videos generados con Sora.</div>
+          <div class="mm-leaf"><div class="mm-ltitle">Berklee BEATL</div>Lab fundado 2025. AIMS Summit jun 2026. Foco: artistas al centro del cambio tecnológico.<a class="mm-llink" href="https://www.berklee.edu/beatl" target="_blank">berklee.edu/beatl ↗</a></div>
+        </div>
+      </div>
+      <div class="mm-branch" onclick="this.classList.toggle('open')">
+        <div class="mm-bhead"><span class="mm-blabel">Arte sonoro + instalación</span><span class="mm-arrow">▶</span></div>
+        <div class="mm-bbody">
+          <div class="mm-leaf"><div class="mm-ltitle">Refik Anadol</div>Referente mundial instalaciones IA+arte. MoMA, SXSW. Usa datos + ML para ambientes visuales y sonoros inmersivos.<a class="mm-llink" href="https://refikanadol.com" target="_blank">refikanadol.com ↗</a></div>
+          <div class="mm-leaf"><div class="mm-ltitle">Ars Sonora</div>40 años de archivo. Arte electroacústico, instalaciones, performances en iberoamérica.<a class="mm-llink" href="https://www.ivoox.com/en/podcast-ars-sonora_sq_f1773_1.html" target="_blank">iVoox ↗</a></div>
+          <div class="mm-leaf"><div class="mm-ltitle">MUSLAB</div>Muestra Internacional de Música Electroacústica. Red iberoamericana de arte sonoro experimental.</div>
+        </div>
+      </div>
+      <div class="mm-branch" onclick="this.classList.toggle('open')">
+        <div class="mm-bhead"><span class="mm-blabel">Debate ético y legal</span><span class="mm-arrow">▶</span></div>
+        <div class="mm-bbody">
+          <div class="mm-leaf"><div class="mm-ltitle">Derechos de entrenamiento</div>Litigios artistas vs empresas IA. 2025: primeros acuerdos de licenciamiento. UE regulando activamente.</div>
+          <div class="mm-leaf"><div class="mm-ltitle">Identidad creativa</div>Berklee: "creative identity, trust, bias, economics of music-making" como preguntas centrales del campo.<a class="mm-llink" href="https://www.berklee.edu/about/ai-machine-learning" target="_blank">Berklee AI principles ↗</a></div>
+        </div>
+      </div>
+      <div class="mm-branch" onclick="this.classList.toggle('open')">
+        <div class="mm-bhead"><span class="mm-blabel">Circuitos de circulación</span><span class="mm-arrow">▶</span></div>
+        <div class="mm-bbody">
+          <div class="mm-leaf"><div class="mm-ltitle">Internacionales</div>SXSW (Austin), Ars Electronica (Linz), CTM Festival (Berlín), MoMA. Circuitos para proyectos IA+arte.</div>
+          <div class="mm-leaf"><div class="mm-ltitle">Iberoamérica</div>Ibermúsicas, Iberescena, OEI. Financiación y circulación para proyectos de la región.<a class="mm-llink" href="https://ibermusicas.org/convocatorias/" target="_blank">Ibermúsicas ↗</a></div>
+          <div class="mm-leaf"><div class="mm-ltitle">Tu posición diferenciadora</div>Arquitecto + diseñador + músico + docente + gestor + dev. Cruce único en el campo IA+cultura LATAM.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <!-- PODCASTS BASE -->
+  <div class="pod-sec">
+    <div class="sec-head">Podcasts base — presentes en todo el plan</div>
+    <div class="pods">
+
+      <div class="pod" id="p1-1">
+        <div class="pod-num">01</div>
+        <div>
+          <div class="pname">Ars Sonora</div>
+          <div class="pdesc">Referente iberoamericano de música experimental y arte sonoro. Activo desde 1985, archivo de 40 años. Episodio reciente ene 2026: Jocy de Oliveira, 90 años — pionera de la electroacústica latinoamericana. Verificado ✓</div>
+          <div class="plinks">
+            <a class="lnk wb" href="https://www.ivoox.com/en/podcast-ars-sonora_sq_f1773_1.html" target="_blank"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>iVoox</a>
+          </div>
+          <div class="done-bar"><button class="btn-done" onclick="tick('p1-1')"></button><div class="progress-mini"><div class="progress-mini-fill" id="pm-p1-1"></div></div></div>
+        </div>
+      </div>
+
+      <div class="pod" id="p1-2">
+        <div class="pod-num">02</div>
+        <div>
+          <div class="pname">Lost and Sound</div>
+          <div class="pdesc">Berlín. Paul Hanford entrevista artistas underground, electrónica y leftfield. Proceso creativo sin filtros. Referente directo para el proyecto musical personal.</div>
+          <div class="plinks">
+            <a class="lnk sp" href="https://open.spotify.com/show/3bMIhoTKYvsmfQUjLWpHXq" target="_blank"><svg viewBox="0 0 24 24"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>Spotify</a>
+          </div>
+          <div class="done-bar"><button class="btn-done" onclick="tick('p1-2')"></button><div class="progress-mini"><div class="progress-mini-fill" id="pm-p1-2"></div></div></div>
+        </div>
+      </div>
+
+      <div class="pod" id="p1-3">
+        <div class="pod-num">03</div>
+        <div>
+          <div class="pname">Escenarios — La industria cultural</div>
+          <div class="pdesc">Colombia/Latinoamérica. Circuitos de exhibición, booking, gestión de compañías. Episodio Ballet Folclórico Antioquia: cómo acercarse a circuitos internacionales de exhibición.</div>
+          <div class="plinks">
+            <a class="lnk ap" href="https://podcasts.apple.com/us/podcast/escenarios-el-podcast-de-la-industria-cultural/id1539804437" target="_blank"><svg viewBox="0 0 24 24"><path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"/></svg>Apple Podcasts</a>
+          </div>
+          <div class="done-bar"><button class="btn-done" onclick="tick('p1-3')"></button><div class="progress-mini"><div class="progress-mini-fill" id="pm-p1-3"></div></div></div>
+        </div>
+      </div>
+
+      <div class="pod" id="p1-4">
+        <div class="pod-num">04</div>
+        <div>
+          <div class="pname">La Industria Musical</div>
+          <div class="pdesc">Symphonic Latino. Herramientas para artistas independientes LATAM. A&R, distribución, booking. Ep. reciente: Epidemic Sound + artistas indie y tendencias 2025.</div>
+          <div class="plinks">
+            <a class="lnk sp" href="https://open.spotify.com/show/0y5Hjtn4dnDVlZIVqJKFHV" target="_blank"><svg viewBox="0 0 24 24"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>Spotify</a>
+            <a class="lnk ap" href="https://podcasts.apple.com/us/podcast/la-industria-musical/id1708631336" target="_blank"><svg viewBox="0 0 24 24"><path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"/></svg>Apple</a>
+          </div>
+          <div class="done-bar"><button class="btn-done" onclick="tick('p1-4')"></button><div class="progress-mini"><div class="progress-mini-fill" id="pm-p1-4"></div></div></div>
+        </div>
+      </div>
+
+      <div class="pod" id="p1-5">
+        <div class="pod-num">05</div>
+        <div>
+          <div class="pname">Sound On Sound Electronic Music</div>
+          <div class="pdesc">Gear, producción, electrónica experimental. Ep. reciente: Guthman Instrument Competition 2025 — nuevas tecnologías. Conexión directa con tu stack Ableton + Pd.</div>
+          <div class="plinks">
+            <a class="lnk ap" href="https://podcasts.apple.com/us/podcast/electronic-music/id1512947854" target="_blank"><svg viewBox="0 0 24 24"><path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"/></svg>Apple</a>
+            <a class="lnk wb" href="https://www.soundonsound.com/sos-podcasts" target="_blank"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>SOS Web</a>
+          </div>
+          <div class="done-bar"><button class="btn-done" onclick="tick('p1-5')"></button><div class="progress-mini"><div class="progress-mini-fill" id="pm-p1-5"></div></div></div>
+        </div>
+      </div>
+
+      <div class="pod" id="p1-6">
+        <div class="pod-num">06</div>
+        <div>
+          <div class="pname">Holmes Archive of Electronic Music</div>
+          <div class="pdesc">Historia y presente de música electrónica experimental. Autor de "Sound Art: Concepts and Practices" (Routledge 2022). Ep. reciente: IA y música electrónica, dic 2025.</div>
+          <div class="plinks">
+            <a class="lnk wb" href="https://theholmesarchive.podbean.com/" target="_blank"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>Podbean</a>
+          </div>
+          <div class="done-bar"><button class="btn-done" onclick="tick('p1-6')"></button><div class="progress-mini"><div class="progress-mini-fill" id="pm-p1-6"></div></div></div>
+        </div>
+      </div>
+
+      <div class="pod" id="p1-7">
+        <div class="pod-num">07</div>
+        <div>
+          <div class="pname">Future Art and Culture Podcast</div>
+          <div class="pdesc">Arte emergente, XR, tecnologías aplicadas. Artistas que cruzan tecnología y arte. Circuitos SXSW y festivales internacionales. Abierto a convocatorias 2026.</div>
+          <div class="plinks">
+            <a class="lnk wb" href="https://www.britishunderground.net/bu-culture/art-ai-the-future-art-and-culture-podcast" target="_blank"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>Web</a>
+          </div>
+          <div class="done-bar"><button class="btn-done" onclick="tick('p1-7')"></button><div class="progress-mini"><div class="progress-mini-fill" id="pm-p1-7"></div></div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <div class="note-area"><textarea class="nta" id="n1" placeholder="notas semana 1 — qué resonó, qué cambiar, términos nuevos..."></textarea><button class="btn-save" onclick="saveNote(1)">guardar</button></div>
+</section>
+
+<!-- ══ SEMANAS 2–6 (estructura idéntica, compactas) ══ -->
+<section class="wp" id="w2">
+  <div class="wkh"><span class="wkn">SEM 02/06</span><h2 class="wkt">Arte sonoro y vanguardia</h2><span class="wkhr" id="wh2">~5h / sem</span></div>
+  <div class="kpi-row">
+    <div class="kpi"><div class="kn">5</div><div class="kl">recursos</div></div>
+    <div class="kpi"><div class="kn">~5h</div><div class="kl">semana</div></div>
+    <div class="kpi"><div class="kn">3</div><div class="kl">formatos</div></div>
+    <div class="kpi"><div class="kn" id="d2">0</div><div class="kl">revisados</div></div>
+  </div>
+  <div class="grid">
+    <div class="card" id="c2-1" data-f="arte" data-fmt="pod">
+      <div class="ctag">arte sonoro · podcast</div><div class="ctit">Ars Sonora — archivo LATAM</div>
+      <div class="csrc">iVoox · verificado ✓</div>
+      <div class="cdesc">3 episodios recomendados: Jocy de Oliveira (electroacústica LATAM), "De Natura Sonorum" 50 años (Parmegiani), Art's Birthday 2026. Base para instalaciones sonoras.</div>
+      <div class="clinks"><a class="lnk wb" href="https://www.ivoox.com/en/podcast-ars-sonora_sq_f1773_1.html" target="_blank"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>iVoox</a></div>
+      <div class="cfoot"><div class="cmeta"><span>~60 min</span></div><span class="cctx">🚗</span></div>
+      <div class="done-bar"><button class="btn-done" onclick="tick('c2-1')"></button><div class="progress-mini"><div class="progress-mini-fill" id="pm-c2-1"></div></div></div>
+    </div>
+    <div class="card" id="c2-2" data-f="arte" data-fmt="pod pdf">
+      <div class="ctag">arte sonoro · podcast + lectura</div><div class="ctit">Holmes Archive — Sound Art concepts</div>
+      <div class="csrc">Podbean · verificado ✓</div>
+      <div class="cdesc">Historia y conceptos del arte sonoro. Ep. ene 2026: IA y música electrónica. Complementar con: "Sound Art: Concepts and Practices" (Routledge 2022).</div>
+      <div class="clinks"><a class="lnk wb" href="https://theholmesarchive.podbean.com/" target="_blank"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>Podbean</a></div>
+      <div class="cfoot"><div class="cmeta"><span>~75 min</span></div><span class="cctx">🚗</span></div>
+      <div class="done-bar"><button class="btn-done" onclick="tick('c2-2')"></button><div class="progress-mini"><div class="progress-mini-fill" id="pm-c2-2"></div></div></div>
+    </div>
+    <div class="card" id="c2-3" data-f="tech" data-fmt="pod">
+      <div class="ctag">tech sonora · podcast</div><div class="ctit">Guthman Instrument Competition 2025</div>
+      <div class="csrc">Sound On Sound · verificado ✓</div>
+      <div class="cdesc">Nuevas tecnologías e instrumentos. Ganador 2025: Chromaplane. Roland R&D + Georgia Tech. Referente para diseño de artefactos sonoros.</div>
+      <div class="clinks"><a class="lnk ap" href="https://podcasts.apple.com/us/podcast/electronic-music/id1512947854" target="_blank"><svg viewBox="0 0 24 24"><path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"/></svg>Apple</a></div>
+      <div class="cfoot"><div class="cmeta"><span>~50 min</span></div><span class="cctx">🍽</span></div>
+      <div class="done-bar"><button class="btn-done" onclick="tick('c2-3')"></button><div class="progress-mini"><div class="progress-mini-fill" id="pm-c2-3"></div></div></div>
+    </div>
+    <div class="card" id="c2-4" data-f="arte" data-fmt="pod">
+      <div class="ctag">arte · tech · podcast</div><div class="ctit">Future Art and Culture — XR e instalación</div>
+      <div class="csrc">British Underground · verificado ✓</div>
+      <div class="cdesc">Artistas usando XR y tecnología para instalaciones. Poulomi Basu: arte inmersivo post-SXSW. Referentes para tus instalaciones sonoras.</div>
+      <div class="clinks"><a class="lnk wb" href="https://www.britishunderground.net/bu-culture/art-ai-the-future-art-and-culture-podcast" target="_blank"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>Web</a></div>
+      <div class="cfoot"><div class="cmeta"><span>~40 min</span></div><span class="cctx">🚗</span></div>
+      <div class="done-bar"><button class="btn-done" onclick="tick('c2-4')"></button><div class="progress-mini"><div class="progress-mini-fill" id="pm-c2-4"></div></div></div>
+    </div>
+    <div class="card" id="c2-5" data-f="arte" data-fmt="mm">
+      <div class="ctag">arte sonoro · mapa mental</div><div class="ctit">Mapa: Arte sonoro — corrientes y referentes</div>
+      <div class="csrc">Embebido — abre en esta pantalla</div>
+      <div class="cdesc">Mapa de corrientes del arte sonoro: electroacústica, arte radiofónico, instalación sonora, performance. Referentes históricos y contemporáneos.</div>
+      <div class="clinks"><a class="lnk mm" href="#mm2" onclick="toggleMM('mm2')"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>Ver mapa</a></div>
+      <div class="cfoot"><div class="cmeta"><span>~10 min</span></div><span class="cctx">👁 visual</span></div>
+      <div class="done-bar"><button class="btn-done" onclick="tick('c2-5')"></button><div class="progress-mini"><div class="progress-mini-fill" id="pm-c2-5"></div></div></div>
+    </div>
+  </div>
+  <!-- MAPA 2 -->
+  <div class="mm-wrap mm-arte" id="mm2" style="display:none">
+    <div class="mm-hdr">
+      <div><div class="mm-title">Arte sonoro — corrientes y referentes</div>
+      <div class="mm-sub">▶ clic en cada nodo para expandir</div></div>
+    </div>
+    <div class="mm-branches">
+      <div class="mm-branch" onclick="this.classList.toggle('open')">
+        <div class="mm-bhead"><span class="mm-blabel">Electroacústica concreta</span><span class="mm-arrow">▶</span></div>
+        <div class="mm-bbody">
+          <div class="mm-leaf"><div class="mm-ltitle">Orígenes GRM (París)</div>Pierre Schaeffer, Pierre Henry. Música concreta: manipulación de sonidos grabados. Base de todo el arte sonoro posterior.</div>
+          <div class="mm-leaf"><div class="mm-ltitle">Bernard Parmegiani</div>"De Natura Sonorum" (1975) — 50 aniversario 2025. Influencia en Aphex Twin, Autechre, Sonic Youth.</div>
+          <div class="mm-leaf"><div class="mm-ltitle">LATAM: Jocy de Oliveira</div>90 años. Pionera electroacústica latinoamericana. Cruce dramaturgia sonora + electrónica.<a class="mm-llink" href="https://www.ivoox.com/en/ars-sonora-jocy-oliveira-noventa-anos-audios-mp3_rf_169977633_1.html" target="_blank">Ep. Ars Sonora ↗</a></div>
+        </div>
+      </div>
+      <div class="mm-branch" onclick="this.classList.toggle('open')">
+        <div class="mm-bhead"><span class="mm-blabel">Instalación sonora</span><span class="mm-arrow">▶</span></div>
+        <div class="mm-bbody">
+          <div class="mm-leaf"><div class="mm-ltitle">Referentes contemporáneos</div>Refik Anadol (IA+datos), Ryoji Ikeda (datos+sonido puro), Janet Cardiff (narrativa inmersiva).</div>
+          <div class="mm-leaf"><div class="mm-ltitle">Tecnologías habilitadoras</div>Web Audio API, libpd (Pure Data en web), OSC, sensores, proyección espacial multicanal.</div>
+          <div class="mm-leaf"><div class="mm-ltitle">Circuito de exhibición</div>Museos de arte contemporáneo, festivales (Ars Electronica, CTM), residencias artísticas.</div>
+        </div>
+      </div>
+      <div class="mm-branch" onclick="this.classList.toggle('open')">
+        <div class="mm-bhead"><span class="mm-blabel">Performance + live electronics</span><span class="mm-arrow">▶</span></div>
+        <div class="mm-bbody">
+          <div class="mm-leaf"><div class="mm-ltitle">Improvisación libre</div>Wade Matthews en Madrid: 30 años construyendo circuito de músicas experimentales.<a class="mm-llink" href="https://www.ivoox.com/en/podcast-ars-sonora_sq_f1773_1.html" target="_blank">Ars Sonora ↗</a></div>
+          <div class="mm-leaf"><div class="mm-ltitle">Errant Space</div>Grabaciones de performance: field recordings, síntesis modular, hydrophone en contextos site-specific.<a class="mm-llink" href="http://www.errant.space" target="_blank">errant.space ↗</a></div>
+          <div class="mm-leaf"><div class="mm-ltitle">Modelo Gorillaz / Daft Punk</div>Personaje público anónimo + vanguardia + live performance. Referente directo para tu proyecto personal.</div>
+        </div>
+      </div>
+      <div class="mm-branch" onclick="this.classList.toggle('open')">
+        <div class="mm-bhead"><span class="mm-blabel">Diseño de artefactos sonoros</span><span class="mm-arrow">▶</span></div>
+        <div class="mm-bbody">
+          <div class="mm-leaf"><div class="mm-ltitle">Luthería digital</div>Guthman Instrument Competition 2025. Ganador: Chromaplane. Roland R&D + Georgia Tech.<a class="mm-llink" href="https://www.soundonsound.com/sos-podcasts" target="_blank">Sound On Sound ↗</a></div>
+          <div class="mm-leaf"><div class="mm-ltitle">Tu oportunidad</div>Arquitectura + producción musical + tecnología = diseño de artefactos sonoros con identidad propia.</div>
+        </div>
+      </div>
+    </div>
+  </div>  <div class="note-area"><textarea class="nta" id="n2" placeholder="notas semana 2..."></textarea><button class="btn-save" onclick="saveNote(2)">guardar</button></div>
+</section>
+
+<section class="wp" id="w3">
+  <div class="wkh"><span class="wkn">SEM 03/06</span><h2 class="wkt">Industria musical y circuitos</h2><span class="wkhr" id="wh3">~5h / sem</span></div>
+  <div class="kpi-row">
+    <div class="kpi"><div class="kn">4</div><div class="kl">recursos</div></div>
+    <div class="kpi"><div class="kn">~5h</div><div class="kl">semana</div></div>
+    <div class="kpi"><div class="kn">3</div><div class="kl">formatos</div></div>
+    <div class="kpi"><div class="kn" id="d3">0</div><div class="kl">revisados</div></div>
+  </div>
+  <div class="grid">
+    <div class="card" id="c3-1" data-f="gestion" data-fmt="pod">
+      <div class="ctag">industria · podcast</div><div class="ctit">La Industria Musical — booking e indie</div>
+      <div class="csrc">Symphonic Latino · verificado ✓</div>
+      <div class="cdesc">Booking, A&R en Epidemic Sound, circuitos globales para artistas indie. Foro Indie Rocks. Herramientas prácticas LATAM.</div>
+      <div class="clinks">
+        <a class="lnk sp" href="https://open.spotify.com/show/0y5Hjtn4dnDVlZIVqJKFHV" target="_blank"><svg viewBox="0 0 24 24"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>Spotify</a>
+        <a class="lnk ap" href="https://podcasts.apple.com/us/podcast/la-industria-musical/id1708631336" target="_blank"><svg viewBox="0 0 24 24"><path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"/></svg>Apple</a>
+      </div>
+      <div class="cfoot"><div class="cmeta"><span>~40 min</span></div><span class="cctx">🚗</span></div>
+      <div class="done-bar"><button class="btn-done" onclick="tick('c3-1')"></button><div class="progress-mini"><div class="progress-mini-fill" id="pm-c3-1"></div></div></div>
+    </div>
+    <div class="card" id="c3-2" data-f="gestion" data-fmt="pod">
+      <div class="ctag">gestión · circuitos · podcast</div><div class="ctit">Escenarios — circuitos internacionales</div>
+      <div class="csrc">Apple Podcasts · Colombia · verificado ✓</div>
+      <div class="cdesc">Ballet Folclórico Antioquia: cómo acercarse a circuitos internacionales, gestión de compañías, profesionalización.</div>
+      <div class="clinks"><a class="lnk ap" href="https://podcasts.apple.com/us/podcast/escenarios-el-podcast-de-la-industria-cultural/id1539804437" target="_blank"><svg viewBox="0 0 24 24"><path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"/></svg>Apple</a></div>
+      <div class="cfoot"><div class="cmeta"><span>~30 min</span></div><span class="cctx">🍽</span></div>
+      <div class="done-bar"><button class="btn-done" onclick="tick('c3-2')"></button><div class="progress-mini"><div class="progress-mini-fill" id="pm-c3-2"></div></div></div>
+    </div>
+    <div class="card" id="c3-3" data-f="musica" data-fmt="pod">
+      <div class="ctag">vanguardia · podcast</div><div class="ctit">Lost and Sound — artistas de vanguardia</div>
+      <div class="csrc">Spotify · Paul Hanford · Berlín · verificado ✓</div>
+      <div class="cdesc">Conversaciones con artistas que redefinen lo sonoro. Underground, electrónica, leftfield. Proceso creativo sin filtros — input directo para el proyecto personal.</div>
+      <div class="clinks"><a class="lnk sp" href="https://open.spotify.com/show/3bMIhoTKYvsmfQUjLWpHXq" target="_blank"><svg viewBox="0 0 24 24"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>Spotify</a></div>
+      <div class="cfoot"><div class="cmeta"><span>~60 min</span></div><span class="cctx">🚗</span></div>
+      <div class="done-bar"><button class="btn-done" onclick="tick('c3-3')"></button><div class="progress-mini"><div class="progress-mini-fill" id="pm-c3-3"></div></div></div>
+    </div>
+    <div class="card" id="c3-4" data-f="gestion" data-fmt="pdf">
+      <div class="ctag">circuitos · lectura</div><div class="ctit">Ibermúsicas + Iberescena — convocatorias</div>
+      <div class="csrc">ibermusicas.org · iberescena.org · verificado ✓</div>
+      <div class="cdesc">Mapear convocatorias activas, fechas, requisitos. Input directo para asesoría de proyectos y circulación internacional latinoamericana.</div>
+      <div class="clinks">
+        <a class="lnk wb" href="https://ibermusicas.org/convocatorias/" target="_blank"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>Ibermúsicas</a>
+        <a class="lnk wb" href="https://iberescena.org/convocatorias/" target="_blank"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>Iberescena</a>
+      </div>
+      <div class="cfoot"><div class="cmeta"><span>~30 min</span></div><span class="cctx">📖</span></div>
+      <div class="done-bar"><button class="btn-done" onclick="tick('c3-4')"></button><div class="progress-mini"><div class="progress-mini-fill" id="pm-c3-4"></div></div></div>
+    </div>
+  </div>
+  <div class="note-area"><textarea class="nta" id="n3" placeholder="notas semana 3..."></textarea><button class="btn-save" onclick="saveNote(3)">guardar</button></div>
+</section>
+
+<section class="wp" id="w4">
+  <div class="wkh"><span class="wkn">SEM 04/06</span><h2 class="wkt">Gestión cultural y asesoría</h2><span class="wkhr" id="wh4">~5h / sem</span></div>
+  <div class="kpi-row">
+    <div class="kpi"><div class="kn">4</div><div class="kl">recursos</div></div>
+    <div class="kpi"><div class="kn">~5h</div><div class="kl">semana</div></div>
+    <div class="kpi"><div class="kn">3</div><div class="kl">formatos</div></div>
+    <div class="kpi"><div class="kn" id="d4">0</div><div class="kl">revisados</div></div>
+  </div>
+  <div class="grid">
+    <div class="card" id="c4-1" data-f="gestion" data-fmt="pod">
+      <div class="ctag">gestión · podcast</div><div class="ctit">Escenarios — gestión cultural LATAM</div>
+      <div class="csrc">Apple Podcasts · verificado ✓</div>
+      <div class="cdesc">Cultura como transformación social. Crespial/UNESCO: patrimonio intangible LATAM. Marcos para asesoría interdisciplinar.</div>
+      <div class="clinks"><a class="lnk ap" href="https://podcasts.apple.com/us/podcast/escenarios-el-podcast-de-la-industria-cultural/id1539804437" target="_blank"><svg viewBox="0 0 24 24"><path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"/></svg>Apple</a></div>
+      <div class="cfoot"><div class="cmeta"><span>~35 min</span></div><span class="cctx">🍽</span></div>
+      <div class="done-bar"><button class="btn-done" onclick="tick('c4-1')"></button><div class="progress-mini"><div class="progress-mini-fill" id="pm-c4-1"></div></div></div>
+    </div>
+    <div class="card" id="c4-2" data-f="ia" data-fmt="pdf">
+      <div class="ctag">IA · cultura · lectura</div><div class="ctit">Berklee: Guiding Principles for AI/Music</div>
+      <div class="csrc">Berklee.edu · verificado ✓</div>
+      <div class="cdesc">Marco institucional de Berklee sobre IA y creatividad: identidad creativa, confianza, sesgo, economía. Esencial para asesoría de proyectos interdisciplinares.</div>
+      <div class="clinks"><a class="lnk wb" href="https://www.berklee.edu/about/ai-machine-learning" target="_blank"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>Berklee</a></div>
+      <div class="cfoot"><div class="cmeta"><span>~15 min</span></div><span class="cctx">📖</span></div>
+      <div class="done-bar"><button class="btn-done" onclick="tick('c4-2')"></button><div class="progress-mini"><div class="progress-mini-fill" id="pm-c4-2"></div></div></div>
+    </div>
+    <div class="card" id="c4-3" data-f="gestion" data-fmt="pdf">
+      <div class="ctag">convocatorias · lectura</div><div class="ctit">OEI Colombia — convocatorias abiertas</div>
+      <div class="csrc">OEI · verificado ✓</div>
+      <div class="cdesc">Convocatorias de la OEI para Colombia: financiación, formación, cooperación cultural. Identificar oportunidades para Red Músicas y MUTAR.</div>
+      <div class="clinks"><a class="lnk wb" href="https://www.oei.int/oficinas/colombia" target="_blank"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>OEI Colombia</a></div>
+      <div class="cfoot"><div class="cmeta"><span>~30 min</span></div><span class="cctx">📖</span></div>
+      <div class="done-bar"><button class="btn-done" onclick="tick('c4-3')"></button><div class="progress-mini"><div class="progress-mini-fill" id="pm-c4-3"></div></div></div>
+    </div>
+    <div class="card" id="c4-4" data-f="arte" data-fmt="pod mm">
+      <div class="ctag">gestores · arte sonoro</div><div class="ctit">Ars Sonora — gestores y curadores</div>
+      <div class="csrc">iVoox · verificado ✓</div>
+      <div class="cdesc">Eps: gestores culturales en arte sonoro, programación, construcción de circuitos. Modelo de gestión para tu rol de asesor.</div>
+      <div class="clinks"><a class="lnk wb" href="https://www.ivoox.com/en/podcast-ars-sonora_sq_f1773_1.html" target="_blank"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>iVoox</a></div>
+      <div class="cfoot"><div class="cmeta"><span>~60 min</span></div><span class="cctx">🚗</span></div>
+      <div class="done-bar"><button class="btn-done" onclick="tick('c4-4')"></button><div class="progress-mini"><div class="progress-mini-fill" id="pm-c4-4"></div></div></div>
+    </div>
+  </div>
+  <div class="note-area"><textarea class="nta" id="n4" placeholder="notas semana 4..."></textarea><button class="btn-save" onclick="saveNote(4)">guardar</button></div>
+</section>
+
+<section class="wp" id="w5">
+  <div class="wkh"><span class="wkn">SEM 05/06</span><h2 class="wkt">Tecnología · Performance · Instalación</h2><span class="wkhr" id="wh5">~5h / sem</span></div>
+  <div class="kpi-row">
+    <div class="kpi"><div class="kn">5</div><div class="kl">recursos</div></div>
+    <div class="kpi"><div class="kn">~5h</div><div class="kl">semana</div></div>
+    <div class="kpi"><div class="kn">4</div><div class="kl">formatos</div></div>
+    <div class="kpi"><div class="kn" id="d5">0</div><div class="kl">revisados</div></div>
+  </div>
+  <div class="grid">
+    <div class="card" id="c5-1" data-f="tech" data-fmt="pod">
+      <div class="ctag">tech sonora · podcast</div><div class="ctit">Sound On Sound — producción experimental</div>
+      <div class="csrc">Sound On Sound · verificado ✓</div>
+      <div class="cdesc">Diseño sonoro teatro/film (UCLA), clipping., hip-hop experimental. Conexión directa con tu stack Ableton + Pd + Max for Live.</div>
+      <div class="clinks">
+        <a class="lnk ap" href="https://podcasts.apple.com/us/podcast/electronic-music/id1512947854" target="_blank"><svg viewBox="0 0 24 24"><path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"/></svg>Apple</a>
+        <a class="lnk wb" href="https://www.soundonsound.com/sos-podcasts" target="_blank"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>Web</a>
+      </div>
+      <div class="cfoot"><div class="cmeta"><span>~55 min</span></div><span class="cctx">🚗</span></div>
+      <div class="done-bar"><button class="btn-done" onclick="tick('c5-1')"></button><div class="progress-mini"><div class="progress-mini-fill" id="pm-c5-1"></div></div></div>
+    </div>
+    <div class="card" id="c5-2" data-f="tech" data-fmt="vid">
+      <div class="ctag">instalación · video</div><div class="ctit">Refik Anadol — instalaciones sonoras IA</div>
+      <div class="csrc">refikanadol.com · canal YouTube verificado ✓</div>
+      <div class="cdesc">Referente mundial instalaciones IA+arte. MoMA, SXSW. Estado del arte para diseño de artefactos sonoros e instalaciones. Ver canal oficial y el sitio con documentación.</div>
+      <div class="clinks">
+        <a class="lnk wb" href="https://refikanadol.com" target="_blank"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>Sitio web</a>
+        <a class="lnk yt" href="https://www.youtube.com/@refikanadolstudio" target="_blank"><svg viewBox="0 0 24 24"><path d="M23.495 6.205a3.007 3.007 0 0 0-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 0 0 .527 6.205a31.247 31.247 0 0 0-.522 5.805 31.247 31.247 0 0 0 .522 5.783 3.007 3.007 0 0 0 2.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 0 0 2.088-2.088 31.247 31.247 0 0 0 .5-5.783 31.247 31.247 0 0 0-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/></svg>YouTube oficial</a>
+      </div>
+      <div class="cfoot"><div class="cmeta"><span>~45 min</span></div><span class="cctx">🍽</span></div>
+      <div class="done-bar"><button class="btn-done" onclick="tick('c5-2')"></button><div class="progress-mini"><div class="progress-mini-fill" id="pm-c5-2"></div></div></div>
+    </div>
+    <div class="card" id="c5-3" data-f="musica" data-fmt="pod">
+      <div class="ctag">performance · podcast</div><div class="ctit">Errant Space — improvisación electrónica</div>
+      <div class="csrc">errant.space · Craig · verificado ✓</div>
+      <div class="cdesc">Grabaciones de performance en vivo. Field recordings, hydrophone, síntesis modular. Técnica y actitud para el live set.</div>
+      <div class="clinks"><a class="lnk wb" href="http://www.errant.space" target="_blank"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>errant.space</a></div>
+      <div class="cfoot"><div class="cmeta"><span>~60 min</span></div><span class="cctx">🚗</span></div>
+      <div class="done-bar"><button class="btn-done" onclick="tick('c5-3')"></button><div class="progress-mini"><div class="progress-mini-fill" id="pm-c5-3"></div></div></div>
+    </div>
+    <div class="card" id="c5-4" data-f="ia" data-fmt="pdf">
+      <div class="ctag">IA · músicos · lectura</div><div class="ctit">Berklee: AI and the Musician</div>
+      <div class="csrc">Berklee.edu · noticias IA · verificado ✓</div>
+      <div class="cdesc">Síntesis de noticias Berklee sobre IA y músicos: generative AI, songwriters, fear vs curiosity. Cruce directo con tu rol de educador y asesor.</div>
+      <div class="clinks"><a class="lnk wb" href="https://www.berklee.edu/about/ai-machine-learning-news" target="_blank"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>Berklee noticias IA</a></div>
+      <div class="cfoot"><div class="cmeta"><span>~20 min</span></div><span class="cctx">📖</span></div>
+      <div class="done-bar"><button class="btn-done" onclick="tick('c5-4')"></button><div class="progress-mini"><div class="progress-mini-fill" id="pm-c5-4"></div></div></div>
+    </div>
+    <div class="card" id="c5-5" data-f="tech" data-fmt="mm">
+      <div class="ctag">tech · mapa mental</div><div class="ctit">Mapa: Tu stack técnico en contexto</div>
+      <div class="csrc">Embebido — abre en esta pantalla</div>
+      <div class="cdesc">Tu cadena técnica actual vs tendencias emergentes de performance+IA. Dónde está tu setup dentro del ecosistema global.</div>
+      <div class="clinks"><a class="lnk mm" href="#mm5" onclick="toggleMM('mm5')"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>Ver mapa</a></div>
+      <div class="cfoot"><div class="cmeta"><span>~10 min</span></div><span class="cctx">👁 visual</span></div>
+      <div class="done-bar"><button class="btn-done" onclick="tick('c5-5')"></button><div class="progress-mini"><div class="progress-mini-fill" id="pm-c5-5"></div></div></div>
+    </div>
+  </div>
+  <div class="mm-wrap mm-tech" id="mm5" style="display:none">
+    <div class="mm-hdr">
+      <div><div class="mm-title">Tu stack técnico en contexto global · 2026</div>
+      <div class="mm-sub">▶ clic en cada nodo para expandir</div></div>
+    </div>
+    <div class="mm-branches">
+      <div class="mm-branch" onclick="this.classList.toggle('open')">
+        <div class="mm-bhead"><span class="mm-blabel">Captura móvil → AUM</span><span class="mm-arrow">▶</span></div>
+        <div class="mm-bbody">
+          <div class="mm-leaf"><div class="mm-ltitle">AUM (iOS)</div>Host de audio modular en móvil. Captura de ideas en campo, prototipos rápidos. Primera etapa del flujo creativo.</div>
+          <div class="mm-leaf"><div class="mm-ltitle">Flujo móvil → DAW</div>Ideas en AUM → exportar audio/MIDI → continuar en Ableton. Ciclo de ideación ágil sin depender del computador.</div>
+        </div>
+      </div>
+      <div class="mm-branch" onclick="this.classList.toggle('open')">
+        <div class="mm-bhead"><span class="mm-blabel">DAW principal → Ableton</span><span class="mm-arrow">▶</span></div>
+        <div class="mm-bbody">
+          <div class="mm-leaf"><div class="mm-ltitle">Ableton Live</div>Centro de producción, grabación y arranging. Session View para live performance. Arrangement para composición.</div>
+          <div class="mm-leaf"><div class="mm-ltitle">Ableton + IA (tendencia)</div>Ableton 12 incorpora transformación de audio con ML. Integración creciente con herramientas generativas.</div>
+        </div>
+      </div>
+      <div class="mm-branch" onclick="this.classList.toggle('open')">
+        <div class="mm-bhead"><span class="mm-blabel">Síntesis → Pd + Max for Live</span><span class="mm-arrow">▶</span></div>
+        <div class="mm-bbody">
+          <div class="mm-leaf"><div class="mm-ltitle">Pure Data</div>Síntesis en tiempo real, procesamiento de señal, generación algorítmica. Patches personalizados como instrumentos únicos.</div>
+          <div class="mm-leaf"><div class="mm-ltitle">Max for Live</div>Integración de Pd/Max dentro de Ableton. Instrumentos y efectos personalizados. ML disponible (ml.star, etc).</div>
+          <div class="mm-leaf"><div class="mm-ltitle">Tendencia emergente</div>Síntesis neural, análisis espectral IA y generación de gestos sonoros dentro de patches Pd/Max.</div>
+        </div>
+      </div>
+      <div class="mm-branch" onclick="this.classList.toggle('open')">
+        <div class="mm-bhead"><span class="mm-blabel">Control → TouchOSC + Protokol</span><span class="mm-arrow">▶</span></div>
+        <div class="mm-bbody">
+          <div class="mm-leaf"><div class="mm-ltitle">TouchOSC</div>Superficie de control OSC/MIDI personalizable desde móvil/tablet. Diseño de interfaces propias para live set.</div>
+          <div class="mm-leaf"><div class="mm-ltitle">Protokol</div>Monitoreo y mapeo MIDI. Visualización de datos de controladores en tiempo real.</div>
+          <div class="mm-leaf"><div class="mm-ltitle">Hardware físico</div>Controladores MIDI, pedales, guitarras. Cadena analógica → digital → procesamiento → output.</div>
+        </div>
+      </div>
+      <div class="mm-branch" onclick="this.classList.toggle('open')">
+        <div class="mm-bhead"><span class="mm-blabel">Instalación sonora</span><span class="mm-arrow">▶</span></div>
+        <div class="mm-bbody">
+          <div class="mm-leaf"><div class="mm-ltitle">Tu stack aplicado</div>Pd corriendo patches autónomos, TouchOSC como interfaz de control espacial, sensores → OSC → síntesis.</div>
+          <div class="mm-leaf"><div class="mm-ltitle">Ampliaciones posibles</div>libpd para instalaciones web, Raspberry Pi + Pd para hardware autónomo, integración de IA generativa.</div>
+        </div>
+      </div>
+      <div class="mm-branch" onclick="this.classList.toggle('open')">
+        <div class="mm-bhead"><span class="mm-blabel">Apps + gestión (stack profesional)</span><span class="mm-arrow">▶</span></div>
+        <div class="mm-bbody">
+          <div class="mm-leaf"><div class="mm-ltitle">Sistema Operativo GEF</div>Python + Google Sheets + Notion + Telegram + Netlify + GitHub. Activo en producción.</div>
+          <div class="mm-leaf"><div class="mm-ltitle">Convergencia</div>El mismo stack puede gestionar residencias, lanzamientos musicales y convocatorias — no solo el equipo.</div>
+        </div>
+      </div>
+    </div>
+  </div>  <div class="note-area"><textarea class="nta" id="n5" placeholder="notas semana 5..."></textarea><button class="btn-save" onclick="saveNote(5)">guardar</button></div>
+</section>
+
+<section class="wp" id="w6">
+  <div class="wkh"><span class="wkn">SEM 06/06</span><h2 class="wkt">Revisión · síntesis · siguiente ciclo</h2><span class="wkhr" id="wh6">~5h / sem</span></div>
+  <div class="flash" style="border-left-color:var(--b)">
+    <div class="flash-i">🔄</div>
+    <div>
+      <div class="flash-t" style="color:var(--b)">semana de consolidación</div>
+      <div class="flash-b">No consumes material nuevo. Sintetizas, mapeas circuitos concretos, actualizas el plan con Claude y conectas lo aprendido con el proyecto personal.</div>
+    </div>
+  </div>
+  <div class="kpi-row">
+    <div class="kpi"><div class="kn">4</div><div class="kl">tareas</div></div>
+    <div class="kpi"><div class="kn">~5h</div><div class="kl">semana</div></div>
+    <div class="kpi"><div class="kn">activo</div><div class="kl">modo</div></div>
+    <div class="kpi"><div class="kn" id="d6">0</div><div class="kl">revisados</div></div>
+  </div>
+  <div class="grid">
+    <div class="card" id="c6-1" data-f="ia" data-fmt="mm">
+      <div class="ctag">síntesis · mapa mental</div><div class="ctit">Mapa personal de conocimiento</div>
+      <div class="csrc">Embebido — plantilla de síntesis</div>
+      <div class="cdesc">Conecta los 5 ejes del plan. Identifica vacíos. Prioriza para el ciclo 2. Abre el mapa y complétalo con lo que aprendiste.</div>
+      <div class="clinks"><a class="lnk mm" href="#mm6" onclick="toggleMM('mm6')"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>Ver plantilla</a></div>
+      <div class="cfoot"><div class="cmeta"><span>~90 min</span></div><span class="cctx">📖 activo</span></div>
+      <div class="done-bar"><button class="btn-done" onclick="tick('c6-1')"></button><div class="progress-mini"><div class="progress-mini-fill" id="pm-c6-1"></div></div></div>
+    </div>
+    <div class="card" id="c6-2" data-f="gestion" data-fmt="pdf">
+      <div class="ctag">circuitos · acción</div><div class="ctit">Mapear 3 circuitos prioritarios</div>
+      <div class="csrc">Ibermúsicas · Iberescena · verificado ✓</div>
+      <div class="cdesc">Identificar 3 circuitos concretos donde tu perfil tenga presencia posible: festivales, residencias, convocatorias.</div>
+      <div class="clinks">
+        <a class="lnk wb" href="https://ibermusicas.org/convocatorias/" target="_blank"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>Ibermúsicas</a>
+        <a class="lnk wb" href="https://iberescena.org" target="_blank"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>Iberescena</a>
+      </div>
+      <div class="cfoot"><div class="cmeta"><span>~60 min</span></div><span class="cctx">📖 activo</span></div>
+      <div class="done-bar"><button class="btn-done" onclick="tick('c6-2')"></button><div class="progress-mini"><div class="progress-mini-fill" id="pm-c6-2"></div></div></div>
+    </div>
+    <div class="card" id="c6-3" data-f="ia" data-fmt="pod">
+      <div class="ctag">plan · siguiente ciclo</div><div class="ctit">Actualizar plan con Claude</div>
+      <div class="csrc">claude.ai</div>
+      <div class="cdesc">Pedirle a Claude que busque novedades del último mes: IA + cultura + música experimental. Ajustar, agregar, eliminar recursos del ciclo 2.</div>
+      <div class="clinks"><a class="lnk wb" href="https://claude.ai" target="_blank"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>Abrir Claude</a></div>
+      <div class="cfoot"><div class="cmeta"><span>~30 min</span></div><span class="cctx">📖 activo</span></div>
+      <div class="done-bar"><button class="btn-done" onclick="tick('c6-3')"></button><div class="progress-mini"><div class="progress-mini-fill" id="pm-c6-3"></div></div></div>
+    </div>
+    <div class="card" id="c6-4" data-f="musica" data-fmt="mm">
+      <div class="ctag">proyecto personal · reflexión</div><div class="ctit">Conectar formación con el proyecto</div>
+      <div class="csrc">reflexión creativa</div>
+      <div class="cdesc">¿Qué entra en la estética del personaje? ¿Qué referentes nuevos cruzan con el núcleo postapocalíptico / steampunk / cómic? Anótalo en las notas.</div>
+      <div class="clinks"></div>
+      <div class="cfoot"><div class="cmeta"><span>~45 min</span></div><span class="cctx">📖 activo</span></div>
+      <div class="done-bar"><button class="btn-done" onclick="tick('c6-4')"></button><div class="progress-mini"><div class="progress-mini-fill" id="pm-c6-4"></div></div></div>
+    </div>
+  </div>
+  <div class="mm-wrap mm-sint" id="mm6" style="display:none">
+    <div class="mm-hdr">
+      <div><div class="mm-title">Plantilla de síntesis — ciclo completado</div>
+      <div class="mm-sub">▶ expande cada nodo y anota tus reflexiones abajo</div></div>
+    </div>
+    <div class="mm-branches">
+      <div class="mm-branch" onclick="this.classList.toggle('open')">
+        <div class="mm-bhead"><span class="mm-blabel">Lo más útil del ciclo</span><span class="mm-arrow">▶</span></div>
+        <div class="mm-bbody">
+          <div class="mm-leaf"><div class="mm-ltitle">¿Qué vas a aplicar directamente?</div>Recursos o ideas con aplicación inmediata en tu trabajo o proyecto personal. Llévalos al ciclo 2.</div>
+          <div class="mm-leaf"><div class="mm-ltitle">¿Qué cambió tu perspectiva?</div>Conceptos, referentes o tendencias que ampliaron tu visión del campo IA + arte + cultura.</div>
+        </div>
+      </div>
+      <div class="mm-branch" onclick="this.classList.toggle('open')">
+        <div class="mm-bhead"><span class="mm-blabel">Vacíos identificados</span><span class="mm-arrow">▶</span></div>
+        <div class="mm-bbody">
+          <div class="mm-leaf"><div class="mm-ltitle">¿Qué faltó cubrir?</div>Temas que este ciclo no cubrió o cubrió poco. Lleva esta lista a Claude para construir el ciclo 2.</div>
+          <div class="mm-leaf"><div class="mm-ltitle">¿Qué recursos no funcionaron?</div>Podcasts, lecturas o mapas que no aportaron lo esperado. Los eliminamos del ciclo 2.</div>
+        </div>
+      </div>
+      <div class="mm-branch" onclick="this.classList.toggle('open')">
+        <div class="mm-bhead"><span class="mm-blabel">3 circuitos a explorar</span><span class="mm-arrow">▶</span></div>
+        <div class="mm-bbody">
+          <div class="mm-leaf"><div class="mm-ltitle">¿Cuáles son los 3 circuitos más relevantes?</div>Basado en lo aprendido: festivales, residencias o convocatorias donde tu perfil tiene presencia real posible.</div>
+          <div class="mm-leaf"><div class="mm-ltitle">Próxima acción concreta por circuito</div>Contactar, postularse, preparar dossier, investigar requisitos. Una acción específica por cada uno.</div>
+          <div class="mm-leaf"><div class="mm-ltitle">Referencias</div><a class="mm-llink" href="https://ibermusicas.org/convocatorias/" target="_blank">Ibermúsicas ↗</a> <a class="mm-llink" href="https://iberescena.org" target="_blank">Iberescena ↗</a> <a class="mm-llink" href="https://www.oei.int/oficinas/colombia" target="_blank">OEI Colombia ↗</a></div>
+        </div>
+      </div>
+      <div class="mm-branch" onclick="this.classList.toggle('open')">
+        <div class="mm-bhead"><span class="mm-blabel">Proyecto musical personal</span><span class="mm-arrow">▶</span></div>
+        <div class="mm-bbody">
+          <div class="mm-leaf"><div class="mm-ltitle">¿Qué conectó con el personaje?</div>Referentes visuales, estéticos o conceptuales del ciclo que alimentan la identidad postapocalíptico/steampunk/cómic.</div>
+          <div class="mm-leaf"><div class="mm-ltitle">¿Qué técnicas quieres probar?</div>Técnicas de producción, performance o instalación del ciclo que quieres incorporar al proyecto.</div>
+        </div>
+      </div>
+      <div class="mm-branch" onclick="this.classList.toggle('open')">
+        <div class="mm-bhead"><span class="mm-blabel">Ajustes para el ciclo 2</span><span class="mm-arrow">▶</span></div>
+        <div class="mm-bbody">
+          <div class="mm-leaf"><div class="mm-ltitle">¿Cambiar el tiempo o formato?</div>¿1h/día fue suficiente? ¿Qué formato funcionó mejor: podcast, lectura, mapa, video?</div>
+          <div class="mm-leaf"><div class="mm-ltitle">Actualizar con Claude</div>Lleva tus respuestas a esta conversación. Claude buscará novedades del mes y construirá el ciclo 2 sobre lo que funcionó.<a class="mm-llink" href="https://claude.ai" target="_blank">Abrir Claude ↗</a></div>
+        </div>
+      </div>
+    </div>
+    <div class="mm-note">
+      <div class="mm-nlabel">notas de síntesis</div>
+      <textarea class="mm-nta" id="nota-sint" placeholder="Lo más útil fue...&#10;Los vacíos que identifiqué son...&#10;Los 3 circuitos a explorar son...&#10;Para el proyecto personal conectó..."></textarea>
+    </div>
+  </div>  <div class="note-area"><textarea class="nta" id="n6" placeholder="reflexiones del ciclo completo — qué cambiar en ciclo 2..."></textarea><button class="btn-save" onclick="saveNote(6)">guardar</button></div>
+</section>
+
+</main>
+</div>
+
+<script>
+// ── CONFIG ──────────────────────────────────────────────────
+// Reemplaza esta URL después de publicar el Apps Script como Web App
+const API_URL = 'https://script.google.com/macros/s/AKfycbwYwxoli1ng0P_dMtlKAytZUU4V4ILqLE5kV7sC4t30kkdek5XjGGuE-ytUOm3LDOpD/exec';
+const LS_SESSION = 'pf-session-v5';
+
+// ── ESTADO ──────────────────────────────────────────────────
+const S = { done: new Set(), notes: {}, time: 1, filter: 'all', fmt: 'all', usuario: null };
+
+// ── TOAST ────────────────────────────────────────────────────
+let toastTimer;
+function toast(msg, tipo = 'ok') {
+  const el = document.getElementById('toast');
+  if (!el) return;
+  el.textContent = msg;
+  el.className = 'toast show ' + tipo;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 3500);
+}
+
+// ── API ──────────────────────────────────────────────────────
+async function api(params) {
+  try {
+    const url = API_URL + '?' + new URLSearchParams(params).toString();
+    const res = await fetch(url);
+    return await res.json();
+  } catch(e) {
+    return { ok: false, error: 'Error de conexión. Verifica tu internet.' };
+  }
+}
+
+// ── LOGIN ────────────────────────────────────────────────────
+async function intentarLogin() {
+  const input = document.getElementById('login-input');
+  const codigo = (input.value || '').trim().toLowerCase();
+  if (!codigo) { mostrarErrorLogin('Ingresa tu código'); return; }
+
+  document.getElementById('login-loading').style.display = 'block';
+  document.getElementById('login-error').textContent = '';
+
+  const data = await api({ action: 'login', codigo });
+
+  document.getElementById('login-loading').style.display = 'none';
+
+  if (!data.ok) {
+    mostrarErrorLogin(data.error || 'Código no válido. Contacta al coordinador.');
+    return;
+  }
+
+  S.usuario = { codigo, nombre: data.nombre, rol: data.rol, esAdmin: data.esAdmin };
+  try { localStorage.setItem(LS_SESSION, JSON.stringify(S.usuario)); } catch(e) {}
+
+  await entrar();
+}
+
+function mostrarErrorLogin(msg) {
+  document.getElementById('login-error').textContent = msg;
+  document.getElementById('login-loading').style.display = 'none';
+}
+
+async function entrar() {
+  // Ocultar login
+  document.getElementById('login-screen').style.display = 'none';
+
+  // Mostrar barra usuario
+  const bar = document.getElementById('user-bar');
+  bar.style.display = 'flex';
+  document.getElementById('user-nombre').textContent = S.usuario.nombre;
+  document.getElementById('user-codigo-display').textContent = '· ' + S.usuario.codigo;
+
+  // Botón dashboard solo para admin
+  if (S.usuario.esAdmin) {
+    document.getElementById('btn-dashboard').style.display = 'block';
+  }
+
+  // Cargar progreso desde el Sheet
+  await cargarProgreso();
+  actualizarProgreso();
+  toast(`Bienvenido, ${S.usuario.nombre} 👋`, 'ok');
+}
+
+function cerrarSesion() {
+  try { localStorage.removeItem(LS_SESSION); } catch(e) {}
+  S.done.clear(); S.notes = {}; S.usuario = null;
+  document.getElementById('user-bar').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('login-input').value = '';
+  document.getElementById('login-error').textContent = '';
+  resetearDOM();
+}
+
+// ── CARGAR PROGRESO ──────────────────────────────────────────
+async function cargarProgreso() {
+  const data = await api({ action: 'cargar', codigo: S.usuario.codigo });
+  if (!data.ok) { toast('No se pudo cargar el progreso guardado.', 'err'); return; }
+
+  S.done.clear();
+  if (data.done) data.done.forEach(id => S.done.add(id));
+  if (data.notes) S.notes = data.notes;
+
+  aplicarEstado();
+}
+
+// ── GUARDAR PROGRESO ─────────────────────────────────────────
+let guardandoTimer;
+async function guardar() {
+  if (!S.usuario) return;
+  clearTimeout(guardandoTimer);
+  guardandoTimer = setTimeout(async () => {
+    const data = await api({
+      action: 'guardar',
+      codigo: S.usuario.codigo,
+      done: JSON.stringify([...S.done]),
+      notes: JSON.stringify(S.notes)
+    });
+    if (!data.ok) toast('Error al guardar. Reintentando...', 'err');
+    actualizarProgreso();
+  }, 800); // debounce 800ms
+}
+
+// ── APLICAR ESTADO AL DOM ────────────────────────────────────
+function aplicarEstado() {
+  resetearDOM();
+  S.done.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.classList.add('done');
+      const pm = document.getElementById('pm-' + id);
+      if (pm) pm.style.width = '100%';
+    }
+  });
+  for (let w = 1; w <= 6; w++) {
+    const ta = document.getElementById('n' + w);
+    if (ta && S.notes[w]) ta.value = S.notes[w];
+  }
+  const taSint = document.getElementById('nota-sint');
+  if (taSint && S.notes['sint']) taSint.value = S.notes['sint'];
+  actualizarContadores();
+}
+
+function resetearDOM() {
+  document.querySelectorAll('.card, .pod').forEach(el => {
+    el.classList.remove('done');
+    const pm = document.getElementById('pm-' + el.id);
+    if (pm) pm.style.width = '0%';
+  });
+  for (let w = 1; w <= 6; w++) {
+    const ta = document.getElementById('n' + w);
+    if (ta) ta.value = '';
+  }
+}
+
+// ── MARCAR RECURSO ───────────────────────────────────────────
+function tick(id) {
+  if (!S.usuario) return;
+  const el = document.getElementById(id);
+  if (!el) return;
+  if (S.done.has(id)) {
+    S.done.delete(id); el.classList.remove('done');
+    const pm = document.getElementById('pm-' + id);
+    if (pm) pm.style.width = '0%';
+  } else {
+    S.done.add(id); el.classList.add('done');
+    const pm = document.getElementById('pm-' + id);
+    if (pm) pm.style.width = '100%';
+    toast('Recurso marcado como revisado ✓', 'ok');
+  }
+  actualizarContadores();
+  guardar();
+}
+
+// ── CONTADORES ───────────────────────────────────────────────
+function actualizarContadores() {
+  let total = 0, done = 0;
+  for (let w = 1; w <= 6; w++) {
+    const cards = document.querySelectorAll('#w' + w + ' [id^="c' + w + '-"], #w' + w + ' [id^="p' + w + '-"]');
+    const wd = [...cards].filter(c => c.classList.contains('done')).length;
+    const el = document.getElementById('d' + w);
+    if (el) el.textContent = wd;
+    total += cards.length; done += wd;
+  }
+  const td = document.getElementById('tot-done'); if (td) td.textContent = done;
+  const ta = document.getElementById('tot-all'); if (ta) ta.textContent = total;
+}
+
+function actualizarProgreso() {
+  const total = document.querySelectorAll('.card, .pod').length;
+  const pct = total > 0 ? Math.round(S.done.size / total * 100) : 0;
+  document.getElementById('rpct').textContent = pct + '%';
+  const r = document.getElementById('ring');
+  if (r) r.style.strokeDashoffset = 163 - (163 * pct / 100);
+}
+
+// ── NOTAS ────────────────────────────────────────────────────
+function saveNote(w) {
+  if (!S.usuario) return;
+  const ta = document.getElementById('n' + w);
+  if (!ta) return;
+  S.notes[w] = ta.value;
+  guardar();
+  const btn = ta.nextElementSibling;
+  btn.textContent = '✓ guardado';
+  setTimeout(() => btn.textContent = 'guardar', 1600);
+}
+
+const taSint = document.getElementById('nota-sint');
+if (taSint) {
+  taSint.addEventListener('input', () => {
+    if (!S.usuario) return;
+    S.notes['sint'] = taSint.value;
+    guardar();
+  });
+}
+
+// ── DASHBOARD ────────────────────────────────────────────────
+async function abrirDashboard() {
+  document.getElementById('dashboard-modal').style.display = 'block';
+  await recargarDashboard();
+}
+
+function cerrarDashboard() {
+  document.getElementById('dashboard-modal').style.display = 'none';
+}
+
+async function recargarDashboard() {
+  const data = await api({ action: 'dashboard', codigo: S.usuario.codigo });
+  const tabla = document.getElementById('dashboard-tabla');
+  if (!data.ok) { tabla.textContent = data.error; return; }
+
+  const total = data.usuarios.length;
+  let html = `<div style="margin-bottom:1rem;font-size:.6rem;color:var(--muted)">${total} participante${total !== 1 ? 's' : ''} registrados</div>`;
+  html += '<div style="display:grid;grid-template-columns:1fr 1fr auto auto;gap:1px;background:var(--border);border:1px solid var(--border)">';
+  html += '<div style="background:var(--s2);padding:.5rem .75rem;font-size:.55rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase">Nombre</div>';
+  html += '<div style="background:var(--s2);padding:.5rem .75rem;font-size:.55rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase">Código</div>';
+  html += '<div style="background:var(--s2);padding:.5rem .75rem;font-size:.55rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase">Recursos</div>';
+  html += '<div style="background:var(--s2);padding:.5rem .75rem;font-size:.55rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase">Última actividad</div>';
+
+  data.usuarios.forEach(u => {
+    const fecha = u.ultimaActividad ? new Date(u.ultimaActividad).toLocaleDateString('es-CO') : '—';
+    const pct = Math.round(u.totalDone / Math.max(document.querySelectorAll('.card, .pod').length, 1) * 100);
+    html += `<div style="background:var(--s1);padding:.5rem .75rem">${u.nombre}</div>`;
+    html += `<div style="background:var(--s1);padding:.5rem .75rem;color:var(--muted)">${u.codigo}</div>`;
+    html += `<div style="background:var(--s1);padding:.5rem .75rem;color:var(--y)">${u.totalDone} <span style="color:var(--muted)">(${pct}%)</span></div>`;
+    html += `<div style="background:var(--s1);padding:.5rem .75rem;color:var(--muted)">${fecha}</div>`;
+  });
+  html += '</div>';
+  tabla.innerHTML = html;
+}
+
+async function crearCodigo() {
+  const nombre = document.getElementById('nuevo-nombre').value.trim();
+  const codigo = document.getElementById('nuevo-codigo').value.trim().toLowerCase();
+  if (!nombre || !codigo) { document.getElementById('dashboard-msg').textContent = 'Completa nombre y código'; return; }
+
+  const data = await api({ action: 'agregarCodigo', codigo: S.usuario.codigo, nombre, nuevoCodigo: codigo });
+  const msg = document.getElementById('dashboard-msg');
+  if (data.ok) {
+    msg.style.color = 'var(--g)';
+    msg.textContent = data.mensaje;
+    document.getElementById('nuevo-nombre').value = '';
+    document.getElementById('nuevo-codigo').value = '';
+    await recargarDashboard();
+  } else {
+    msg.style.color = 'var(--r)';
+    msg.textContent = data.error;
+  }
+}
+
+// ── NAVEGACIÓN ───────────────────────────────────────────────
+function go(n) {
+  document.querySelectorAll('.wp').forEach(p => p.classList.remove('on'));
+  document.querySelectorAll('.si').forEach(i => i.classList.remove('on'));
+  document.getElementById('w' + n).classList.add('on');
+  document.querySelector('.si[data-w="' + n + '"]').classList.add('on');
+}
+
+// ── FILTROS ──────────────────────────────────────────────────
+document.querySelectorAll('.pl[data-t]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.pl[data-t]').forEach(b => b.classList.remove('on'));
+    btn.classList.add('on'); S.time = parseFloat(btn.dataset.t);
+    const h = S.time * 5;
+    for (let w = 1; w <= 6; w++) { const el = document.getElementById('wh' + w); if (el) el.textContent = '~' + h + 'h / sem'; }
+  });
+});
+
+document.querySelectorAll('.pl[data-f]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.pl[data-f]').forEach(b => b.classList.remove('on'));
+    btn.classList.add('on'); S.filter = btn.dataset.f; aplicarFiltros();
+  });
+});
+
+document.querySelectorAll('.pl[data-fmt]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.pl[data-fmt]').forEach(b => b.classList.remove('on'));
+    btn.classList.add('on'); S.fmt = btn.dataset.fmt; aplicarFiltros();
+  });
+});
+
+function aplicarFiltros() {
+  document.querySelectorAll('.card').forEach(card => {
+    const aMatch = S.filter === 'all' || card.dataset.f === S.filter;
+    const fMatch = S.fmt === 'all' || (card.dataset.fmt || '').includes(S.fmt);
+    card.classList.toggle('gone', !(aMatch && fMatch));
+  });
+}
+
+// ── MAPAS ────────────────────────────────────────────────────
+function toggleMM(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.style.display = el.style.display === 'none' ? 'block' : 'none';
+}
+
+// ── INIT ─────────────────────────────────────────────────────
+// Verificar sesión guardada
+(async function init() {
+  try {
+    const saved = localStorage.getItem(LS_SESSION);
+    if (saved) {
+      S.usuario = JSON.parse(saved);
+      await entrar();
+      return;
+    }
+  } catch(e) {}
+  // Sin sesión guardada: mostrar login
+  document.getElementById('login-screen').style.display = 'flex';
+})();
+
+actualizarContadores();
+</script>
+</body>
+</html>
