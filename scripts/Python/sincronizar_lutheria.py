@@ -31,12 +31,18 @@ def leer_pestana(nombre):
         return pd.DataFrame()
     df = pd.read_csv(io.StringIO(r.text))
     df = df.fillna("")
+    # Solo eliminar filas donde GESTIÓN, LUTHIER y ESCUELA están todos vacíos
+    col_gestion = next((c for c in df.columns if "GESTIÓN" in c.upper() or "GESTION" in c.upper()), None)
     col_luthier = next((c for c in df.columns if "LUTHIER" in c.upper()), None)
     col_escuela = next((c for c in df.columns if "ESCUELA" in c.upper()), None)
+    mask_vacias = pd.Series([True] * len(df))
+    if col_gestion:
+        mask_vacias = mask_vacias & (df[col_gestion].str.strip() == "")
     if col_luthier:
-        df = df[df[col_luthier].str.strip() != ""]
+        mask_vacias = mask_vacias & (df[col_luthier].str.strip() == "")
     if col_escuela:
-        df = df[df[col_escuela].str.strip() != ""]
+        mask_vacias = mask_vacias & (df[col_escuela].str.strip() == "")
+    df = df[~mask_vacias]
     df["_pestana"] = nombre
     return df
 
@@ -117,7 +123,7 @@ print(f"\nLeyendo pestañas: {PESTANAS}")
 df = leer_sheet_completo()
 
 if df.empty:
-    print("\nNo se encontraron datos. Verifica que el Sheet es público.")
+    print("\nNo se encontraron datos.")
     exit()
 
 print(f"\nTotal registros a procesar: {len(df)}")
