@@ -31,7 +31,6 @@ def leer_pestana(nombre):
         return pd.DataFrame()
     df = pd.read_csv(io.StringIO(r.text))
     df = df.fillna("")
-    # Solo eliminar filas donde GESTIÓN, LUTHIER y ESCUELA están todos vacíos
     col_gestion = next((c for c in df.columns if "GESTIÓN" in c.upper() or "GESTION" in c.upper()), None)
     col_luthier = next((c for c in df.columns if "LUTHIER" in c.upper()), None)
     col_escuela = next((c for c in df.columns if "ESCUELA" in c.upper()), None)
@@ -175,6 +174,8 @@ for _, row in df.iterrows():
 
     if pestana:
         props["Mes"] = {"select": {"name": pestana}}
+    if luthier:
+        props["Luthier"] = {"select": {"name": luthier.upper()}}
     if semana:
         props["Semana"] = {"rich_text": [{"text": {"content": semana}}]}
     if dia:
@@ -196,9 +197,6 @@ for _, row in df.iterrows():
 
     if escuela.upper() in mapa_escuelas:
         props["Escuela o Agrupación Integrada"] = {"relation": [{"id": mapa_escuelas[escuela.upper()]}]}
-
-    if luthier.upper() in mapa_luthiers:
-        props["Luthier"] = {"relation": [{"id": mapa_luthiers[luthier.upper()]}]}
 
     page_id = crear_pagina(ID_SOLICITUDES, props)
     if page_id:
