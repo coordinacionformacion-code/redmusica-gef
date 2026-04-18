@@ -13,7 +13,7 @@ ID_ESCUELAS    = "32a4129640748079825cf524a9b87382"
 
 SHEET_ID = "1rYu2N0WwN6j1cM_a9JGxVHsuhPZtsm_PxhI8ogsU9CA"
 
-# ── Agrega aquí el nombre de cada pestaña nueva al inicio del mes ──────────────
+# ── Agrega el nombre de cada pestaña nueva al inicio del mes ───────────────────
 PESTANAS = ["Febrero", "Marzo", "Abril"]
 # ──────────────────────────────────────────────────────────────────────────────
 
@@ -167,6 +167,8 @@ for _, row in df.iterrows():
         "Realizada": {"checkbox": realizada},
     }
 
+    if pestana:
+        props["Mes"] = {"select": {"name": pestana}}
     if semana:
         props["Semana"] = {"rich_text": [{"text": {"content": semana}}]}
     if dia:
@@ -210,6 +212,5 @@ print(f"  Errores:               {errores}")
 print("=" * 55)
 
 # ─── CADA MES NUEVO ───────────────────────────────────────────────────────────
-#  Agrega el nombre de la nueva pestaña a PESTANAS arriba:
 #  PESTANAS = ["Febrero", "Marzo", "Abril", "Mayo"]
 # ─────────────────────────────────────────────────────────────────────────────
