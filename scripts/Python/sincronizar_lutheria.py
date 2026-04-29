@@ -17,7 +17,7 @@ import io
 NOTION_TOKEN    = "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"
 ID_LUTHIERIA    = "32b41296407480d2a569e453ad92ca49"
 ID_GESTIONES_BD = "32a41296407480d6b790cc693a7f57d9"
-ID_ESCUELAS_BD  = "32a41296407480bda75a000b7617a3de"
+ID_ESCUELAS_BD  = "32a4129640748079825cf524a9b87382"  # BD Escuelas y Agrupaciones
 
 # URL base del Sheets publicado — el GID identifica cada pestaña
 SHEETS_BASE_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTtxMIHX47El9s0k2FAZo9sfgydMylY7cuGEI6_Yvu4ZeRtY21ffkz-D9pIU9uirtda241SSbYhCHN5/pub"
