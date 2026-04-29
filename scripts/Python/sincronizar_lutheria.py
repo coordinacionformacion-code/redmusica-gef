@@ -17,6 +17,7 @@ import io
 NOTION_TOKEN    = "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"
 ID_LUTHIERIA    = "32b41296407480d2a569e453ad92ca49"
 ID_GESTIONES_BD = "32a41296407480d6b790cc693a7f57d9"
+ID_ESCUELAS_BD  = "32a41296407480bda75a000b7617a3de"
 
 # URL base del Sheets publicado — el GID identifica cada pestaña
 SHEETS_BASE_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTtxMIHX47El9s0k2FAZo9sfgydMylY7cuGEI6_Yvu4ZeRtY21ffkz-D9pIU9uirtda241SSbYhCHN5/pub"
@@ -67,6 +68,16 @@ def cargar_gestiones():
     print(f"  Gestiones cargadas: {list(mapa.keys())}")
     return mapa
 
+def cargar_escuelas():
+    registros = extraer_bd(ID_ESCUELAS_BD)
+    mapa = {}
+    for r in registros:
+        titulo = get_titulo(r["properties"], "Nombre", "Name", "Escuela")
+        if titulo:
+            mapa[titulo.strip()] = r["id"]
+    print(f"  Escuelas cargadas: {len(mapa)}")
+    return mapa
+
 def cargar_existentes():
     registros = extraer_bd(ID_LUTHIERIA)
     existentes = set()
@@ -83,7 +94,7 @@ def leer_csv(gid):
     reader = csv.DictReader(io.StringIO(r.text))
     return list(reader)
 
-def crear_props(fila, mes, num_fila, gestiones_map):
+def crear_props(fila, mes, num_fila, gestiones_map, escuelas_map):
     semana    = str(fila.get("SEMANA", "")).strip()
     gestion   = str(fila.get("GESTIÓN", "")).strip()
     luthier   = str(fila.get("LUTHIER", "")).strip()
@@ -125,16 +136,26 @@ def crear_props(fila, mes, num_fila, gestiones_map):
     if gestion and gestion in gestiones_map:
         props["Gestión"] = {"relation": [{"id": gestiones_map[gestion]}]}
 
+    # Relación Escuela de Música o Agrupación Integrada
+    if escuela and escuela in escuelas_map:
+        props["Escuela de Música o Agrupación Integrada"] = {"relation": [{"id": escuelas_map[escuela]}]}
+    elif escuela:
+        # Buscar coincidencia parcial
+        for key in escuelas_map:
+            if escuela.lower() in key.lower() or key.lower() in escuela.lower():
+                props["Escuela de Música o Agrupación Integrada"] = {"relation": [{"id": escuelas_map[key]}]}
+                break
+
     return titulo, props
 
-def sincronizar_mes(mes, gid, gestiones_map, existentes):
+def sincronizar_mes(mes, gid, gestiones_map, escuelas_map, existentes):
     print(f"\n  📅 Procesando: {mes}")
     filas = leer_csv(gid)
     creados = 0
     omitidos = 0
 
     for idx, fila in enumerate(filas, start=2):
-        titulo, props = crear_props(fila, mes, idx, gestiones_map)
+        titulo, props = crear_props(fila, mes, idx, gestiones_map, escuelas_map)
         if titulo in existentes:
             omitidos += 1
             continue
@@ -161,6 +182,7 @@ if __name__ == "__main__":
 
     print("\nCargando datos de Notion...")
     gestiones_map = cargar_gestiones()
+    escuelas_map  = cargar_escuelas()
     existentes    = cargar_existentes()
     print(f"  Registros existentes en Notion: {len(existentes)}")
 
@@ -171,7 +193,7 @@ if __name__ == "__main__":
         if gid == "PENDIENTE":
             print(f"\n  ⚠️  {mes} — GID pendiente de configurar, omitida")
             continue
-        c, o = sincronizar_mes(mes, gid, gestiones_map, existentes)
+        c, o = sincronizar_mes(mes, gid, gestiones_map, escuelas_map, existentes)
         total_creados  += c
         total_omitidos += o
 
