@@ -1,30 +1,34 @@
 """
 GEF Red Músicas de Medellín
-Script: sincronizar_lutheria.py v3
-Descripción: Sincroniza TODOS los registros de cada pestaña mensual
-             del Sheets de Luthería con la BD Solicitudes Luthería en Notion.
+Script: sincronizar_lutheria.py v5
+Descripción: Sincroniza TODOS los registros del Sheets de Luthería
+             con la BD Solicitudes Luthería en Notion via URL CSV pública.
+             Una sola URL — lee todas las pestañas.
              Sin filtros — todos los registros son importados.
-             Cada pestaña (Febrero, Marzo, Abril...) asigna el campo Mes
-             automáticamente según el nombre de la pestaña.
+             El mes se asigna según la pestaña de origen.
 Uso: python sincronizar_lutheria.py
 """
 
 import requests
-import gspread
-from google.oauth2.service_account import Credentials
+import csv
+import io
 
 # ── Configuración ──
-NOTION_TOKEN     = "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"
-SHEETS_ID        = "1hl9O87x7UsSo--jHKINa5dLIadysVmDM87yelpHD6yM"
-ID_LUTHIERIA     = "32b41296-4074-8082-bf2c-000b9379960e"
-ID_GESTIONES_BD  = "32a41296-4074-80b7-9bd9-000b46cf4fd5"
-ID_LUTHIERS_BD   = "32b41296-4074-8091-bf03-000b35146f15"
-CREDENTIALS_FILE = "credentials.json"
+NOTION_TOKEN    = "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"
+ID_LUTHIERIA    = "32b41296407480d2a569e453ad92ca49"
+ID_GESTIONES_BD = "32a41296407480d6b790cc693a7f57d9"
 
-MESES_VALIDOS = [
-    "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
-    "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
-]
+# URL base del Sheets publicado — el GID identifica cada pestaña
+SHEETS_BASE_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTtxMIHX47El9s0k2FAZo9sfgydMylY7cuGEI6_Yvu4ZeRtY21ffkz-D9pIU9uirtda241SSbYhCHN5/pub"
+
+# Pestañas — añadir GID de cada mes nuevo aquí
+PESTANAS = {
+    "Febrero": "210158856",
+    "Marzo":   "1216569413",
+    "Abril":   "1718498447",
+    # Agregar nuevos meses aquí:
+    # "Mayo": "GID_MAYO",
+}
 
 HEADERS_NOTION = {
     "Authorization": f"Bearer {NOTION_TOKEN}",
@@ -32,7 +36,6 @@ HEADERS_NOTION = {
     "Notion-Version": "2022-06-28"
 }
 
-# ── Funciones Notion ──
 def extraer_bd(db_id):
     url = f"https://api.notion.com/v1/databases/{db_id}/query"
     resultados = []
@@ -47,35 +50,24 @@ def extraer_bd(db_id):
             break
     return resultados
 
-def get_titulo(props, campo):
-    items = props.get(campo, {}).get("title", [])
-    return items[0]["plain_text"].strip() if items else ""
+def get_titulo(props, *campos):
+    for campo in campos:
+        items = props.get(campo, {}).get("title", [])
+        if items:
+            return items[0]["plain_text"].strip()
+    return ""
 
 def cargar_gestiones():
     registros = extraer_bd(ID_GESTIONES_BD)
     mapa = {}
     for r in registros:
-        for campo in ["Gestión", "Name", "Nombre"]:
-            titulo = get_titulo(r["properties"], campo)
-            if titulo:
-                mapa[titulo.strip()] = r["id"]
-                break
+        titulo = get_titulo(r["properties"], "Gestión", "Name", "Nombre")
+        if titulo:
+            mapa[titulo.strip()] = r["id"]
     print(f"  Gestiones cargadas: {list(mapa.keys())}")
     return mapa
 
-def cargar_luthiers():
-    registros = extraer_bd(ID_LUTHIERS_BD)
-    mapa = {}
-    for r in registros:
-        for campo in ["Nombre", "Name", "Luthier", "Registro"]:
-            titulo = get_titulo(r["properties"], campo)
-            if titulo:
-                mapa[titulo.upper().strip()] = r["id"]
-                break
-    print(f"  Luthiers cargados: {list(mapa.keys())}")
-    return mapa
-
-def cargar_registros_existentes():
+def cargar_existentes():
     registros = extraer_bd(ID_LUTHIERIA)
     existentes = set()
     for r in registros:
@@ -84,10 +76,17 @@ def cargar_registros_existentes():
             existentes.add(titulo)
     return existentes
 
-def crear_registro_notion(fila, mes, num_fila, gestiones_map, luthiers_map):
+def leer_csv(gid):
+    url = f"{SHEETS_BASE_URL}?gid={gid}&single=true&output=csv"
+    r = requests.get(url)
+    r.encoding = "utf-8"
+    reader = csv.DictReader(io.StringIO(r.text))
+    return list(reader)
+
+def crear_props(fila, mes, num_fila, gestiones_map):
     semana    = str(fila.get("SEMANA", "")).strip()
     gestion   = str(fila.get("GESTIÓN", "")).strip()
-    luthier   = str(fila.get("LUTHIER", "")).strip().upper()
+    luthier   = str(fila.get("LUTHIER", "")).strip()
     dia       = str(fila.get("DÍA", "")).strip()
     jornada   = str(fila.get("JORNADA", "")).strip()
     tipo      = str(fila.get("TIPO DE ESCUELA O AGRUPACIÓN INTEGRADA", "")).strip()
@@ -96,14 +95,14 @@ def crear_registro_notion(fila, mes, num_fila, gestiones_map, luthiers_map):
     obs       = str(fila.get("OBSERVACIÓN", "")).strip()
     realizada = str(fila.get("REALIZADA", "FALSE")).strip().upper() == "TRUE"
 
-    # Construir título único — incluye número de fila para evitar duplicados en filas vacías
-    partes_titulo = [mes, f"F{num_fila:03d}"]
-    if semana: partes_titulo.append(semana)
-    if gestion: partes_titulo.append(gestion)
-    if dia: partes_titulo.append(dia)
-    if jornada: partes_titulo.append(jornada)
-    if escuela: partes_titulo.append(escuela)
-    titulo = " — ".join(partes_titulo)
+    # Título único con número de fila
+    partes = [mes, f"F{num_fila:03d}"]
+    if semana:  partes.append(semana)
+    if gestion: partes.append(gestion)
+    if luthier: partes.append(luthier)
+    if dia:     partes.append(dia)
+    if escuela: partes.append(escuela)
+    titulo = " — ".join(partes)
 
     props = {
         "Registro":    {"title": [{"text": {"content": titulo[:200]}}]},
@@ -113,124 +112,68 @@ def crear_registro_notion(fila, mes, num_fila, gestiones_map, luthiers_map):
         "Realizada":   {"checkbox": realizada},
     }
 
-    # Día
     if dia in ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"]:
         props["Día"] = {"select": {"name": dia}}
-
-    # Jornada
     if jornada in ["Mañana", "Tarde", "Noche"]:
         props["Jornada"] = {"select": {"name": jornada}}
-
-    # Modalidad
     if modalidad in ["Presencial Escuela", "Presencial Equipamiento", "Taller"]:
         props["Modalidad"] = {"select": {"name": modalidad}}
-
-    # Tipo de Escuela
-    tipos_validos = ["Agrupación Integrada", "Sinfónica", "Enfoques Alternativos", "Cuerdas Frotadas", "Vientos y Percusión"]
+    tipos_validos = ["Agrupación Integrada", "Sinfónica", "Enfoques Alternativos",
+                     "Cuerdas Frotadas", "Vientos y Percusión"]
     if tipo in tipos_validos:
         props["Tipo de Escuela o Agrupación Integrada"] = {"select": {"name": tipo}}
-
-    # Relación Gestión
     if gestion and gestion in gestiones_map:
         props["Gestión"] = {"relation": [{"id": gestiones_map[gestion]}]}
 
-    # Relación Luthier — exacta o parcial
-    if luthier:
-        if luthier in luthiers_map:
-            props["Luthier"] = {"relation": [{"id": luthiers_map[luthier]}]}
-        else:
-            for key in luthiers_map:
-                if luthier in key or key in luthier:
-                    props["Luthier"] = {"relation": [{"id": luthiers_map[key]}]}
-                    break
-
     return titulo, props
 
-def sincronizar_pestaña(hoja, mes, gestiones_map, luthiers_map, existentes):
-    # Leer TODOS los valores incluyendo filas vacías
-    todos_los_valores = hoja.get_all_values()
-    if not todos_los_valores:
-        return 0, 0
-
-    encabezados = todos_los_valores[0]
+def sincronizar_mes(mes, gid, gestiones_map, existentes):
+    print(f"\n  📅 Procesando: {mes}")
+    filas = leer_csv(gid)
     creados = 0
     omitidos = 0
 
-    for idx, fila_raw in enumerate(todos_los_valores[1:], start=2):
-        # Mapear fila a diccionario usando encabezados
-        fila = {}
-        for i, col in enumerate(encabezados):
-            fila[col.strip()] = fila_raw[i] if i < len(fila_raw) else ""
-
-        titulo, props = crear_registro_notion(fila, mes, idx, gestiones_map, luthiers_map)
-
-        # Evitar duplicados
+    for idx, fila in enumerate(filas, start=2):
+        titulo, props = crear_props(fila, mes, idx, gestiones_map)
         if titulo in existentes:
             omitidos += 1
             continue
-
         payload = {
             "parent": {"database_id": ID_LUTHIERIA},
             "properties": props
         }
-        r = requests.post(
-            "https://api.notion.com/v1/pages",
-            headers=HEADERS_NOTION,
-            json=payload
-        )
+        r = requests.post("https://api.notion.com/v1/pages",
+                          headers=HEADERS_NOTION, json=payload)
         if r.status_code == 200:
             existentes.add(titulo)
             creados += 1
         else:
             print(f"    ⚠️  Error fila {idx}: {r.status_code} — {r.text[:100]}")
 
+    print(f"     ✅ Creados: {creados} | Duplicados omitidos: {omitidos}")
     return creados, omitidos
 
-# ── Main ──
 if __name__ == "__main__":
     print("=" * 55)
     print("SINCRONIZACIÓN LUTHERÍA — Red Músicas de Medellín")
     print("Modo: TODOS los registros sin filtros")
     print("=" * 55)
 
-    print("\nConectando con Google Sheets...")
-    scope = [
-        "https://spreadsheets.google.com/feeds",
-        "https://www.googleapis.com/auth/drive"
-    ]
-    creds = Credentials.from_service_account_file(CREDENTIALS_FILE, scopes=scope)
-    client = gspread.authorize(creds)
-    spreadsheet = client.open_by_key(SHEETS_ID)
-
-    print("Cargando datos de Notion...")
+    print("\nCargando datos de Notion...")
     gestiones_map = cargar_gestiones()
-    luthiers_map  = cargar_luthiers()
-    existentes    = cargar_registros_existentes()
+    existentes    = cargar_existentes()
     print(f"  Registros existentes en Notion: {len(existentes)}")
 
-    print("\nSincronizando pestañas...")
-    total_creados  = 0
+    total_creados = 0
     total_omitidos = 0
 
-    for hoja in spreadsheet.worksheets():
-        nombre = hoja.title.strip()
-        mes = None
-        for m in MESES_VALIDOS:
-            if nombre.lower() == m.lower():
-                mes = m
-                break
-
-        if not mes:
-            print(f"  Pestaña '{nombre}' — omitida (no es mes válido)")
+    for mes, gid in PESTANAS.items():
+        if gid == "PENDIENTE":
+            print(f"\n  ⚠️  {mes} — GID pendiente de configurar, omitida")
             continue
-
-        print(f"\n  📅 Procesando: {nombre} → Mes = {mes}")
-        creados, omitidos = sincronizar_pestaña(
-            hoja, mes, gestiones_map, luthiers_map, existentes
-        )
-        print(f"     ✅ Creados: {creados} | Duplicados omitidos: {omitidos}")
-        total_creados  += creados
-        total_omitidos += omitidos
+        c, o = sincronizar_mes(mes, gid, gestiones_map, existentes)
+        total_creados  += c
+        total_omitidos += o
 
     print("\n" + "=" * 55)
     print(f"SINCRONIZACIÓN COMPLETADA")
